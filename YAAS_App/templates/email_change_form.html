@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block head %}
+    <title>YAAS | My Account - Change Email Address</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}" />
+{% endblock %}
+
+{% block content %}
+    <h1>Change Email Address</h1>
+    {% if email_exists %}
+        <p class="error">The given email address is already registered!</p>
+    {% endif %}
+
+    {% if emails_no_match %}
+        <p class="error">The two email addresses do not match!</p>
+    {% endif %}
+
+    {%  crispy form form.helper %}
+
+{% endblock %}

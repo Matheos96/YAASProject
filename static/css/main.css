@@ -1,0 +1,10 @@
+h1,h2 {
+    text-align:center;
+}
+p {
+    font-size: larger;
+}
+#acc_details {
+    margin: 0 auto;
+    width: 50%;
+}

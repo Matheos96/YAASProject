@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <title>YAAS | My Account</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h1><u>My Account</u></h1>
+        <br />
+        <div id="acc_details">
+            <h3>Username: {{ user.username }}</h3>
+            <h3>Email: {{ user.email }}</h3>
+            <h3>First Name: {{ user.first_name }}</h3>
+            <h3>Last Name: {{ user.last_name }}</h3>
+            <br />
+            <h3><u>Edit Account</u></h3>
+            <p><a href="{% url "email_change" %}">Change Email Address</a></p>
+            <p><a href="{% url "password_change" %}">Change Password</a></p>
+        </div>
+        {% else %}
+        <h2>You are not logged in.</h2>
+    {% endif %}
+
+
+{% endblock %}

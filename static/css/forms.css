@@ -1,0 +1,23 @@
+ h1 {
+    text-align: center;
+     margin-bottom: 15px;
+}
+form {
+    margin: 0 auto;
+    width: 180px;
+
+}
+#change_pw {
+    width: 400px;
+}
+#submit-id-submit {
+    margin-top: 10px;
+}
+
+ul.errorlist {
+    list-style-type: none;
+}
+p.error {
+    text-align: center;
+    font-weight: bold;
+}
