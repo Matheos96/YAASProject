@@ -18,6 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+   #path('new_auction', new_auction, name="new_auction"),
     path("accounts/", include("django.contrib.auth.urls")),
     path('', include("YAAS_App.urls"))
 ]

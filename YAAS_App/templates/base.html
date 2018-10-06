@@ -17,8 +17,9 @@
                 <li class="nav-item"><a href="{% url "index" %}" class="nav-link">Home</a></li>
                 {% if not user.is_authenticated %}
                     <li class="nav-item"><a href="{% url "register" %}" class="nav-link">Register</a></li>
-                    <li class="nav-item"><a href="{% url "login" %}" class="nav-link">Login</a></li>
+                    <li class="nav-item"><a href="{% url "login_user" %}" class="nav-link">Login</a></li>
                 {% else %}
+                    <li class="nav-item"><a href="{% url "index" %}" class="nav-link">New Auction</a></li>
                     <li class="nav-item"><a href="{% url "my_account" %}" class="nav-link">My Account</a></li>
                     <li class="nav-item"><a href="{% url "logout" %}" class="nav-link">Logout</a></li>
                 {% endif %}

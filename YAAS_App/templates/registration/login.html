@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block head %}
     <title>YAAS | Login</title>
@@ -9,14 +10,6 @@
 {% block content %}
     <h1>Login</h1>
 
-    <form method="POST" action = "{% url 'login' %}">
-    {% csrf_token %}
-
-    {{ form.as_p }}
-
-    <input type="submit" class="btn btn-success" value="Login">
-
-
-    </form>
+    {% crispy form form.helper %}
 
 {% endblock %}
