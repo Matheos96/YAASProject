@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block head %}
+    <title>YAAS | Auction - {{ auction_title }}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+    <h1><u>{{ auction_title }}</u></h1>
+
+    <p class="center">Description: {{ auction_description }}</p>
+    <p class="center">Minimum Price: {{ auction_min_price }} €</p>
+    <p class="center">Deadline: {{ auction_deadline }}</p>
+
+    {% if user == auction_seller %}
+        <p class="center"><a href="{% url "edit_auction" auction_id=auction_id %}">Edit Description</a></p>
+    {% endif %}
+
+
+{% endblock %}

@@ -13,6 +13,9 @@ form {
 #submit-id-submit {
     margin-top: 10px;
 }
+#submit-id-post {
+    margin-top: 10px;
+}
 
 ul.errorlist {
     list-style-type: none;
@@ -20,4 +23,8 @@ ul.errorlist {
 p.error {
     text-align: center;
     font-weight: bold;
+}
+
+p.preview {
+    text-align: center;
 }

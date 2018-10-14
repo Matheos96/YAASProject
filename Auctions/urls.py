@@ -18,5 +18,8 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('new', new_auction, name="new_auction")
+    path('new', AddAuction.as_view(), name="new_auction"),
+    path('confirm', confirm_form, name="confirm_form"),
+    path('<int:auction_id>', AuctionView.as_view(), name="auction_view"),
+    path('edit/<int:auction_id>', EditAuction.as_view(), name="edit_auction"),
 ]

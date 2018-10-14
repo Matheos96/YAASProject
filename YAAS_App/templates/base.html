@@ -1,7 +1,11 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    {% load bootstrap4 %}       {# import bootstrap4/bootstrap3 #}
+    {% bootstrap_css %}         {# Embed Bootstrap CSS #}
+    {% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+    {% block extrahead %}       {# Embeds Extra Resources #}
+    {% endblock %}              {# Ends Extra Resources #}
     <meta charset="UTF-8">
     {% block head %}
     {% endblock %}
@@ -19,7 +23,7 @@
                     <li class="nav-item"><a href="{% url "register" %}" class="nav-link">Register</a></li>
                     <li class="nav-item"><a href="{% url "login_user" %}" class="nav-link">Login</a></li>
                 {% else %}
-                    <li class="nav-item"><a href="{% url "index" %}" class="nav-link">New Auction</a></li>
+                    <li class="nav-item"><a href="{% url "new_auction" %}" class="nav-link">New Auction</a></li>
                     <li class="nav-item"><a href="{% url "my_account" %}" class="nav-link">My Account</a></li>
                     <li class="nav-item"><a href="{% url "logout" %}" class="nav-link">Logout</a></li>
                 {% endif %}

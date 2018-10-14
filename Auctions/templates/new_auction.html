@@ -1,4 +1,27 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
 {% block head %}
-    <title>HEJSAN</title>
+    <title>YAAS | New Auction</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+    <h1><u>New Auction</u></h1>
+    {% block extrahead %}   {# Extra Resources Start #}
+   {{ form.media }}        {# Form required JS and CSS #}
+   {% endblock %}          {# Extra Resources End #}
+
+    {% if messages %}
+        {% for message in messages %}
+        <p class ="error"><b>{{ message }}</b></p>
+        {% endfor %}
+    {% endif %}
+
+    {% crispy form form.helper %}
+
+
 {% endblock %}

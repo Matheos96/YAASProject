@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block head %}
+    <title>YAAS | Edit Auction</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+    <h1><u>Editing Auction "{{ form.title.value }}"</u></h1>
+
+    {% crispy form form.helper %}
+
+
+{% endblock %}

@@ -1,4 +1,4 @@
-h1,h2 {
+h1,h2, h4, p.center  {
     text-align:center;
 }
 p {
@@ -8,3 +8,12 @@ p {
     margin: 0 auto;
     width: 50%;
 }
+
+form.search {
+  overflow: hidden;
+}
+#search {
+  float: right;
+  clear: both;
+}
+

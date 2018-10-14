@@ -1,17 +1,38 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block head %}
     <title>YAAS | HOME</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
 {% endblock %}
 
 {% block content %}
-    <h1>Hejsan</h1>
 
-    {% if user.is_authenticated %}
-        <h2>Your name is {{ user.username }}</h2>
-        {% else %}
-        <h2>You are not logged in</h2>
+    <form class="search" action="{% url "search" %}" method="get">
+    <div id="search">
+        <input class="search" type="text" placeholder="Search" name="q" />
+        <input class="search" type="submit" value="Search" />
+        </div>
+    </form>
+
+    {% if messages %}
+        {% for message in messages %}
+        <p class ="center"><b>{{ message }}</b></p>
+        {% endfor %}
     {% endif %}
+
+    {% for auction in auctions reversed %}
+
+        <a href="{% url "auction_view" auction_id=auction.id %}"><h4><u>{{ auction.title }}</u></h4></a>
+        <p class="center"><i>{{ auction.description }}</i></p>
+        <p class="center"><i>Min Price: {{ auction.min_price }} €</i></p>
+        {% if auction.seller.get_full_name %}
+            <p class="center">Seller: {{ auction.seller.get_full_name }}</p>
+            {% else %}
+            <p class="center">Seller: {{ auction.seller }}</p>
+        {% endif %}
+
+    {% endfor %}
 
 
 {% endblock %}

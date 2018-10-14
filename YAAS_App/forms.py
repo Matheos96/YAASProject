@@ -68,5 +68,3 @@ class ChangeEmailForm(forms.Form):
                                     "new_email2",
                                     Submit("submit", "Change", css_class="btn btn-primary"))
 
-
-

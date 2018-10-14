@@ -1,9 +1,20 @@
 from django.shortcuts import render, redirect
 from YAAS_App.forms import *
+from Auctions.models import Auction
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.utils import timezone
+from django.db.models import Q
 # Create your views here.
+
+
+def search(request):
+    query = request.GET.get('q')
+    results = Auction.objects.filter(Q(title__icontains=query) | Q(description__icontains=query)
+                                     | Q(seller__username__icontains=query) | Q(seller__first_name__icontains=query) |
+                                     Q(seller__last_name__icontains=query))
+    return render(request, "index.html", {"auctions": results})
 
 
 def login_user(request):
@@ -31,12 +42,14 @@ def login_user(request):
 
 
 def index(request):
-    return render(request, "index.html")
+    auctions = Auction.objects.all().filter(deadline__gte=timezone.now())
+    return render(request, "index.html", {'auctions': auctions})
 
 
 @login_required()
 def my_account(request):
-    return render(request, "my_account.html")
+    my_auctions = Auction.objects.filter(seller=request.user)
+    return render(request, "my_account.html", {"my_auctions": my_auctions})
 
 
 @login_required()

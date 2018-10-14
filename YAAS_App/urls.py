@@ -4,6 +4,7 @@ from YAAS_App.views import *
 
 urlpatterns = [
     path('', index, name="index"),
+    path('search', search, name="search"),
     path("register", register, name="register"),
     path("login", login_user, name="login_user"),
     path("my_account", my_account, name="my_account"),

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from django.conf.global_settings import DATETIME_INPUT_FORMATS
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,7 +32,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'bootstrap4',
     'YAAS_App',
+    'bootstrap_datepicker_plus',
     'Auctions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -112,7 +115,7 @@ TIME_ZONE = 'Europe/Helsinki'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
 
@@ -131,3 +134,16 @@ LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
 
 LOGIN_URL = 'login_user'
+
+# BOOTSTRAP
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}
+
+DATETIME_INPUT_FORMATS += ('%d.%m.%Y %H:%M:%S',)
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'matheosyaas@gmail.com'
+EMAIL_HOST_PASSWORD = 'WebDevServices2018'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
