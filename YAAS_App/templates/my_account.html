@@ -21,7 +21,7 @@
             <p><a href="{% url "password_change" %}">Change Password</a></p>
             <br />
             <h3><u>My Auctions</u></h3>
-            {% for auction in my_auctions %}
+            {% for auction in my_auctions reversed %}
                <p><a href="{% url "auction_view" auction_id=auction.id %}"><u>{{ auction.title }}</u></a></p>
             {% endfor %}
         </div>

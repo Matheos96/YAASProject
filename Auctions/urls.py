@@ -22,4 +22,5 @@ urlpatterns = [
     path('confirm', confirm_form, name="confirm_form"),
     path('<int:auction_id>', AuctionView.as_view(), name="auction_view"),
     path('edit/<int:auction_id>', EditAuction.as_view(), name="edit_auction"),
+    path('ban/<int:auction_id>', BanAuction.as_view(), name="ban_auction"),
 ]

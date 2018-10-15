@@ -4,20 +4,50 @@
 
 
 {% block head %}
-    <title>YAAS | Auction - {{ auction_title }}</title>
+    <title>YAAS | Auction - {{ auction.title }}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}" />
 {% endblock %}
 
 {% block content %}
 
-    <h1><u>{{ auction_title }}</u></h1>
+    {% if messages %}
+        {% for message in messages %}
+        <p class ="center"><b>{{ message }}</b></p>
+        {% endfor %}
+    {% endif %}
 
-    <p class="center">Description: {{ auction_description }}</p>
-    <p class="center">Minimum Price: {{ auction_min_price }} €</p>
-    <p class="center">Deadline: {{ auction_deadline }}</p>
+    {% if auction.status != auction.STATUS_ACTIVE%}
+        <p class ="center"><b>This auction is no longer active!</b></p>
+    {% endif %}
 
-    {% if user == auction_seller %}
-        <p class="center"><a href="{% url "edit_auction" auction_id=auction_id %}">Edit Description</a></p>
+    <h1><u>{{ auction.title }}</u></h1>
+
+    <p class="center">Description: {{ auction.description }}</p>
+    <p class="center">Current Bid: {% if max_bid is not None %}{{ max_bid.amount }} {% else %} 0.00 {% endif %} €</p>
+
+    {% if max_bid.bidder == user %}
+        <p class="center"><b>You have the currently winning bid!</b></p>
+    {% endif %}
+
+    {% if user != auction.seller %}
+    {% crispy form form.helper %}
+        <br />
+    {% endif %}
+
+    <p class="center">Minimum Price: {{ auction.min_price }} €</p>
+    <p class="center">Deadline: {{ auction.deadline }}</p>
+
+
+    {% if auction.seller.get_full_name %}
+            <p class="center">Seller: {{ auction.seller.get_full_name }}</p>
+            {% else %}
+            <p class="center">Seller: {{ auction.seller }}</p>
+    {% endif %}
+
+
+    {% if user == auction.seller %}
+        <p class="center"><a href="{% url "edit_auction" auction_id=auction.id %}">Edit Description</a></p>
     {% endif %}
 
 

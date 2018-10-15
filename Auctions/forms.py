@@ -28,7 +28,7 @@ class AuctionForm(forms.ModelForm):
                                     "description",
                                     "min_price",
                                     "deadline",
-                                    Submit("post", "Post", css_class="btn btn-success"))
+                                    Submit("post", "Post", css_class="btn btn-primary"))
 
 
 class EditAuctionForm(AuctionForm):
@@ -59,4 +59,12 @@ class ConfirmForm(forms.Form):
                                     Submit("no", "Discard", css_class="btn btn-warning"))
 
 
+class MakeBidForm(forms.Form):
+    bid = forms.DecimalField(required=True, max_digits=9, decimal_places=2)
 
+    def __init__(self, *args, **kwargs):
+        super(MakeBidForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper
+        self.helper.form_method = "post"
+        self.helper.layout = Layout("bid",
+                                    Submit("make_bid", "Make Bid", css_class="btn btn-primary"))

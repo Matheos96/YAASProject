@@ -142,8 +142,7 @@ BOOTSTRAP4 = {
 
 DATETIME_INPUT_FORMATS += ('%d.%m.%Y %H:%M:%S',)
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'matheosyaas@gmail.com'
-EMAIL_HOST_PASSWORD = 'WebDevServices2018'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+# Email settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'emails')

@@ -11,9 +11,7 @@ from django.db.models import Q
 
 def search(request):
     query = request.GET.get('q')
-    results = Auction.objects.filter(Q(title__icontains=query) | Q(description__icontains=query)
-                                     | Q(seller__username__icontains=query) | Q(seller__first_name__icontains=query) |
-                                     Q(seller__last_name__icontains=query))
+    results = Auction.objects.filter(Q(title__icontains=query))
     return render(request, "index.html", {"auctions": results})
 
 
@@ -42,7 +40,7 @@ def login_user(request):
 
 
 def index(request):
-    auctions = Auction.objects.all().filter(deadline__gte=timezone.now())
+    auctions = Auction.objects.all().filter(deadline__gte=timezone.now(), status=Auction.STATUS_ACTIVE)
     return render(request, "index.html", {'auctions': auctions})
 
 
