@@ -22,6 +22,7 @@ class UserRegistrationForm(UserCreationForm):
         super().__init__(*args, **kwargs)
 
         self.helper = FormHelper
+        self.helper.form_action = reverse("register")
         self.helper.form_method = "post"
         self.helper.layout = Layout("first_name",
                                     "last_name",

@@ -126,7 +126,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
+    os.path.join(BASE_DIR, "static"),
 ]
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn")
 
@@ -145,4 +145,4 @@ DATETIME_INPUT_FORMATS += ('%d.%m.%Y %H:%M:%S',)
 # Email settings
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'emails')
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'static/emails')

@@ -32,6 +32,9 @@
             <p class="center">Seller: {{ auction.seller }}</p>
         {% endif %}
 
+        {% empty %}
+            <h4>No Auctions matching the criteria!</h4>
+
     {% endfor %}
 
 

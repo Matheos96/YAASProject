@@ -13,7 +13,6 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path
 from .views import *
 
@@ -22,5 +21,5 @@ urlpatterns = [
     path('confirm', confirm_form, name="confirm_form"),
     path('<int:auction_id>', AuctionView.as_view(), name="auction_view"),
     path('edit/<int:auction_id>', EditAuction.as_view(), name="edit_auction"),
-    path('ban/<int:auction_id>', BanAuction.as_view(), name="ban_auction"),
+    path('ban/<int:auction_id>', ban_auction, name="ban_auction"),
 ]

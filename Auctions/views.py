@@ -65,6 +65,7 @@ def send_email(subject, message, to_email):
     from_email = "YAASAuctionSite@noreply.com"
     with mail.get_connection() as connection:
         mail.EmailMessage(subject, message, from_email, to_email, connection=connection).send(fail_silently=False)
+        print("mail sent")
 
 
 class AuctionView(View):
@@ -73,8 +74,9 @@ class AuctionView(View):
             auction = Auction.objects.get(id=auction_id)
             bid_form = MakeBidForm()
             bid_form.helper.form_action = reverse("auction_view", kwargs={'auction_id': auction_id})
+            request.session['description1'] = auction.description
             current_bid = get_max_bid(auction)
-            return render(request, "auction.html", {'auction': auction, 'form': bid_form, "max_bid": current_bid})
+            return render(request, "auction.html", {'auction': auction, 'bid_form': bid_form, "max_bid": current_bid})
         except Auction.DoesNotExist:
             messages.warning(request, "There is no auction with that id!")
             return redirect("index")
@@ -86,33 +88,46 @@ class AuctionView(View):
         curr_bid = get_max_bid(auction)
         #  Check if description changed?
         if auction.status == Auction.STATUS_ACTIVE:
-            if auction.seller != request.user:
-                if current_winner != request.user:
-                    if bid_form.is_valid():
-                        new_bid = bid_form.cleaned_data['bid']
-                        if curr_bid is None:
-                            cmp = auction.min_price
-                        else:
-                            cmp = curr_bid.amount
-                        if ((new_bid > cmp) and curr_bid is not None) or ((new_bid >= cmp) and cmp == auction.min_price):
-                            bid = Bid(bidder=request.user, auction=auction, amount=new_bid)
-                            bid.save()
-                            curr_bid = bid
-                            bid_form = MakeBidForm()
-                            bid_form.helper.form_action = reverse("auction_view", kwargs={'auction_id': auction_id})
-                        else:
-                            if cmp == auction.min_price:
-                                messages.warning(request, "Your bid has to be greater than or equal to the minimum price!")
+            if request.session['description1'] == auction.description:
+                if auction.seller != request.user:
+                    if current_winner != request.user:
+                        if bid_form.is_valid():
+                            new_bid = bid_form.cleaned_data['bid']
+                            if curr_bid is None:
+                                cmp = auction.min_price
                             else:
-                                messages.warning(request, "Your bid has to be greater than the currently winning bid!")
+                                cmp = curr_bid.amount
+                            if ((new_bid > cmp) and curr_bid is not None) or ((new_bid >= cmp) and cmp == auction.min_price):
+                                bid = Bid(bidder=request.user, auction=auction, amount=new_bid)
+                                bid.save()
+                                send_email(auction.title+": New bid", bid.bidder.__str__() + " has placed a new bid of "
+                                           + str(bid.amount) + "€ on your auction '"+auction.title + "'!",
+                                           [auction.seller.email])
+                                if current_winner is not None:
+                                    send_email(auction.title + ": New bid",
+                                               "You have been overbid on the auction '" + auction.title + "'!",
+                                               [current_winner.email])
+                                curr_bid = bid
+                                bid_form = MakeBidForm()
+                                bid_form.helper.form_action = reverse("auction_view", kwargs={'auction_id': auction_id})
+                            else:
+                                if cmp == auction.min_price:
+                                    messages.warning(request, "Your bid has to be greater than or equal to the minimum"
+                                                              " price!")
+                                else:
+                                    messages.warning(request, "Your bid has to be greater than the currently winning "
+                                                              "bid!")
+                    else:
+                        messages.warning(request, "You already have the highest bid!")
                 else:
-                    messages.warning(request, "You already have the highest bid!")
+                    messages.warning(request, "You cannot bid on your own auctions!")
             else:
-                messages.warning(request, "You cannot bid on your own auctions!")
+                messages.error(request, "The description seems to have changed. Please reload the page "
+                                        "and try to submit your bid again. ")
         else:
             messages.warning(request, "This auction is no longer active!")
 
-        return render(request, "auction.html", {'auction': auction, 'form': bid_form, "max_bid": curr_bid})
+        return render(request, "auction.html", {'auction': auction, 'bid_form': bid_form, "max_bid": curr_bid})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -146,13 +161,22 @@ class EditAuction(View):
         return redirect("index")
 
 
-@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
-class BanAuction(View):
-    def get(self, request, auction_id):
-        print("Hej")
-
-    def post(self,request, auction_id):
-        pass
+@user_passes_test(lambda u: u.is_superuser)
+def ban_auction(request, auction_id):
+    auction = Auction.objects.get(id=auction_id)
+    if auction is not None:
+        auction.status = Auction.STATUS_BANNED
+        auction.save()
+        emails = list(Bid.objects.filter(auction=auction).values_list('bidder__email', flat=True).distinct())
+        emails.append([auction.seller.email])
+        send_email("Auction: " + auction.title + "has been banned!", "We would like to let you know that the "
+                                                                    "auction " + auction.title + "has been banned from "
+                                                                                                 "the YAAS site.",
+                   emails)
+        messages.warning(request, "Auction banned!")
+        return render(request, "auction.html", {'auction': auction})
+    messages.warning(request, "There is no auction with that id!")
+    return redirect("index")
 
 
 def get_max_bid(auction):

@@ -3,15 +3,20 @@ from YAAS_App.forms import *
 from Auctions.models import Auction
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models import Q
+from django.conf import settings
+import os
 # Create your views here.
 
 
 def search(request):
     query = request.GET.get('q')
-    results = Auction.objects.filter(Q(title__icontains=query))
+    results = Auction.objects.filter(Q(title__icontains=query), deadline__gte=timezone.now(),
+                                     status=Auction.STATUS_ACTIVE)
     return render(request, "index.html", {"auctions": results})
 
 
@@ -98,4 +103,11 @@ def register(request):
     context = {"form": form}
     return render(request, "registration/register.html", context)
 
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_panel(request):
+    email_path = settings.EMAIL_FILE_PATH
+    email_list = os.listdir(email_path)
+    banned_auctions = Auction.objects.filter(status=Auction.STATUS_BANNED)
+    return render(request, "admin_panel.html", {'emails': email_list, 'banned': banned_auctions})
 

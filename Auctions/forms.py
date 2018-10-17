@@ -68,3 +68,5 @@ class MakeBidForm(forms.Form):
         self.helper.form_method = "post"
         self.helper.layout = Layout("bid",
                                     Submit("make_bid", "Make Bid", css_class="btn btn-primary"))
+
+

@@ -10,6 +10,12 @@
 {% block content %}
     <h1>Login</h1>
 
+    {% if messages %}
+        {% for message in messages %}
+        <p class ="center"><b>{{ message }}</b></p>
+        {% endfor %}
+    {% endif %}
+
     {% crispy form form.helper %}
 
 {% endblock %}

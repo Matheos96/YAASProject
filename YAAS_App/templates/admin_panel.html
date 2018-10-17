@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <title>YAAS | Admin Panel</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
+{% endblock %}
+
+{% block content %}
+    {% if request.user.is_superuser %}
+        <h1><u>Admin Panel</u></h1>
+        <br />
+        <div class="row">
+            <div class="col-xs-6 col-sm-4">
+                <h3><u>Sent Emails</u></h3>
+                {% for emailfile in emails reversed %}
+                   <p><a href="static/emails/{{ emailfile }}"><u>{{ emailfile }}</u></a></p>
+                {% endfor %}
+            </div>
+            <div class="col-xs-6 col-sm-4"></div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-6 col-sm-4">
+            <h3><u>Banned Auctions</u></h3>
+                {% for auction in banned reversed %}
+                   <p><a href="{% url "auction_view" auction_id=auction.id %}"><u>{{ auction.title }}</u></a></p>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <h2>Access denied.</h2>
+    {% endif %}
+
+
+{% endblock %}
