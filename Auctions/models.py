@@ -21,6 +21,9 @@ class Auction(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ['deadline']
+
 
 class Bid(models.Model):
     auction = models.ForeignKey(Auction, null=False, on_delete=models.CASCADE, related_name='made_on')

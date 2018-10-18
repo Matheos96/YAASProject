@@ -3,13 +3,15 @@ from YAAS_App.forms import *
 from Auctions.models import Auction
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
+from django.utils import translation
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Q
 from django.conf import settings
 import os
+from .models import *
 # Create your views here.
 
 
@@ -29,12 +31,14 @@ def login_user(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
+                set_user_lang(request, user)
                 next_url = request.session['next_url']
                 if next_url:
                     return redirect(next_url)
                 return redirect("index")
             else:
                 print("INVALID LOGIN")
+                messages.error(request, "Invalid login information!")
 
     else:
         form = LoginForm()
@@ -87,6 +91,7 @@ def change_email(request):
 
 
 def register(request):
+    print(request.session[translation.LANGUAGE_SESSION_KEY])
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
@@ -111,3 +116,45 @@ def admin_panel(request):
     banned_auctions = Auction.objects.filter(status=Auction.STATUS_BANNED)
     return render(request, "admin_panel.html", {'emails': email_list, 'banned': banned_auctions})
 
+
+def set_language(request, lang):
+    locale = "en"  # Default is english
+    if lang == UserLanguage.LANG_SV:
+        locale = "sv"
+
+    if request.user.is_authenticated:
+        try:
+            user_lang = UserLanguage.objects.get(user=request.user)
+            user_lang.lang_pref = lang
+            user_lang.save()
+            messages.info(request, "Your language setting has been updated!")
+
+        except UserLanguage.DoesNotExist:
+            user_lang = UserLanguage.objects.create(user=request.user, lang_pref=lang)
+            user_lang.save()
+            messages.info(request, "Your language setting has been saved!")
+
+    translation.activate(locale)
+    request.session[translation.LANGUAGE_SESSION_KEY] = locale
+    print(request.session[translation.LANGUAGE_SESSION_KEY])
+    return render(request, "index.html")
+
+
+def set_user_lang(request, user):
+    locale = "en"
+    try:
+        user_lang = UserLanguage.objects.get(user=user)
+        if user_lang.lang_pref == 2:
+            locale = "sv"
+    except UserLanguage.DoesNotExist:
+        user_lang = UserLanguage.objects.create(user=user)
+        user_lang.save()
+    translation.activate(locale)
+    request.session[translation.LANGUAGE_SESSION_KEY] = locale
+
+
+# REMOVE THIS
+def delete_all(self):
+    Auction.objects.all().delete()
+    print("ALL DELETED")
+    return redirect("index")

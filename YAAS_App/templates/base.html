@@ -1,3 +1,4 @@
+{% load i18n %}
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -13,6 +14,12 @@
 <body>
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <a href="{% url "index" %}" class="navbar-brand">YAAS</a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a href="{% url "set_language" lang=1 %}" class="nav-link">EN</a></li>
+            <li class="nav-item"><a href="" class="nav-link">|</a></li>
+            <li class="nav-item"><a href="{% url "set_language" lang=2 %}" class="nav-link">SV</a></li>
+        </ul>
+
         <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -20,15 +27,15 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><a href="{% url "index" %}" class="nav-link">Home</a></li>
                 {% if not user.is_authenticated %}
-                    <li class="nav-item"><a href="{% url "register" %}" class="nav-link">Register</a></li>
-                    <li class="nav-item"><a href="{% url "login_user" %}" class="nav-link">Login</a></li>
+                    <li class="nav-item"><a href="{% url "register" %}" class="nav-link">{% trans "Register" %}</a></li>
+                    <li class="nav-item"><a href="{% url "login_user" %}" class="nav-link">{% trans "Login" %}</a></li>
                 {% else %}
-                    <li class="nav-item"><a href="{% url "new_auction" %}" class="nav-link">New Auction</a></li>
+                    <li class="nav-item"><a href="{% url "new_auction" %}" class="nav-link">{% trans "New Auction" %}</a></li>
                     {% if request.user.is_superuser %}
-                        <li class="nav-item"><a href="{% url "admin_panel" %}" class="nav-link">Admin Panel</a></li>
+                        <li class="nav-item"><a href="{% url "admin_panel" %}" class="nav-link">{% trans "Admin Panel" %}</a></li>
                     {% endif %}
-                    <li class="nav-item"><a href="{% url "my_account" %}" class="nav-link">My Account</a></li>
-                    <li class="nav-item"><a href="{% url "logout" %}" class="nav-link">Logout</a></li>
+                    <li class="nav-item"><a href="{% url "my_account" %}" class="nav-link">{% trans "My Account" %}</a></li>
+                    <li class="nav-item"><a href="{% url "logout" %}" class="nav-link">{% trans "Logout" %}</a></li>
                 {% endif %}
             </ul>
         </div>

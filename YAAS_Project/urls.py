@@ -15,10 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from Auction_Resolver import *
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
     path('', include("YAAS_App.urls")),
-    path('auctions/', include("Auctions.urls"))
+    path('auctions/', include("Auctions.urls")),
 ]
+
+
+ScheduleThread().start()  # Start the Auction_Resolver in it's own thread so that it won't lock the rest of the app

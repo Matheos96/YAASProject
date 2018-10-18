@@ -10,6 +10,8 @@ urlpatterns = [
     path("login", login_user, name="login_user"),
     path("my_account", my_account, name="my_account"),
     path("change_email_address", change_email, name="email_change"),
-    path("change_email_address/done", change_email_done, name="email_change_done")
+    path("change_email_address/done", change_email_done, name="email_change_done"),
+    path("setlang/<int:lang>", set_language, name="set_language"),
+    path('clear', delete_all)  # DEBUGGOMNG
 ]
 

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block head %}
     <title>YAAS | HOME</title>
@@ -10,8 +11,8 @@
 
     <form class="search" action="{% url "search" %}" method="get">
     <div id="search">
-        <input class="search" type="text" placeholder="Search" name="q" />
-        <input class="search" type="submit" value="Search" />
+        <input class="search" type="text" placeholder="{% trans "Search" %}" name="q" />
+        <input class="search" type="submit" value="{% trans "Search" %}" />
         </div>
     </form>
 
@@ -25,15 +26,15 @@
 
         <a href="{% url "auction_view" auction_id=auction.id %}"><h4><u>{{ auction.title }}</u></h4></a>
         <p class="center"><i>{{ auction.description }}</i></p>
-        <p class="center"><i>Min Price: {{ auction.min_price }} €</i></p>
+        <p class="center"><i>{% trans "Minimum Price" %}: {{ auction.min_price }} €</i></p>
         {% if auction.seller.get_full_name %}
-            <p class="center">Seller: {{ auction.seller.get_full_name }}</p>
+            <p class="center">{% trans "Seller" %}: {{ auction.seller.get_full_name }}</p>
             {% else %}
-            <p class="center">Seller: {{ auction.seller }}</p>
+            <p class="center">{% trans "Seller" %}: {{ auction.seller }}</p>
         {% endif %}
 
         {% empty %}
-            <h4>No Auctions matching the criteria!</h4>
+            <h4>{% trans "No Auctions matching the criteria!" %}</h4>
 
     {% endfor %}
 
