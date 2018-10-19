@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load static %}
-
+{% load i18n %}
 
 {% block head %}
-    <title>YAAS | Auction - {{ auction.title }}</title>
+    <title>YAAS | {% trans "Auction" %} - {{ auction.title }}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}" />
 {% endblock %}
@@ -14,7 +14,7 @@
     {% if messages %}
         {% for message in messages %}
             {% if message.tags == "error" %}
-                <p class ="center"><b>{{ message }} <a href="{% url "auction_view" auction_id=auction.id %}">Reload</a></b></p>
+                <p class ="center"><b>{{ message }} <a href="{% url "auction_view" auction_id=auction.id %}">{% trans "Reload" %}</a></b></p>
             {% else %}
                 <p class ="center"><b>{{ message }}</b></p>
             {% endif %}
@@ -22,18 +22,23 @@
     {% endif %}
 
     {% if auction.status == auction.STATUS_BANNED%}
-        <p class ="center"><b>This auction has been banned!</b></p>
+        <p class ="center"><b>{% trans "This auction has been banned" %}!</b></p>
     {% elif auction.status != auction.STATUS_ACTIVE%}
-        <p class ="center"><b>This auction is no longer active!</b></p>
+        <p class ="center"><b>{% trans "This auction is no longer active" %}!</b></p>
     {% endif %}
 
     <h1><u>{{ auction.title }}</u></h1>
 
-    <p class="center">Description: {{ auction.description }}</p>
-    <p class="center">Current Bid: {% if max_bid is not None %}{{ max_bid.amount }} {% else %} 0.00 {% endif %} €</p>
+    <p class="center">{% trans "Description" %}: {{ auction.description }}</p>
+    <p class="center">{% trans "Current Bid" %}: {% if max_bid is not None %}{{ max_bid.amount }} {% else %} 0.00 {% endif %} €</p>
+
+    <div style="display: none" id="bid_curr"><p class="center">{% for key,value in bid_other_currencies.items %} <b>{{ key }}</b>: {{ value }} {% endfor %}</p></div>
+
+    <p class="center"><button onclick="hideShow('bid_curr')">Show current bid in other currencies</button></p>
+
 
     {% if max_bid.bidder == user %}
-        <p class="center"><b>You have the currently winning bid!</b></p>
+        <p class="center"><b>{% trans "You have the currently winning bid" %}!</b></p>
     {% endif %}
 
     {% if user != auction.seller and bid_form and auction.status == auction.STATUS_ACTIVE %}
@@ -41,23 +46,38 @@
         <br />
     {% endif %}
 
-    <p class="center">Minimum Price: {{ auction.min_price }} €</p>
-    <p class="center">Deadline: {{ auction.deadline }}</p>
+    <p class="center">{% trans "Minimum Price" %}: {{ auction.min_price }} €</p>
+
+    <div style="display: none" id="min_curr"><p class="center">{% for key,value in min_other_currencies.items %} <b>{{ key }}</b>: {{ value }} {% endfor %}</p></div>
+    <p class="center"><button onclick="hideShow('min_curr')">Show minimum price in other currencies</button></p>
+
+    <p class="center">{% trans "Deadline" %}: {{ auction.deadline }}</p>
 
 
     {% if auction.seller.get_full_name %}
-            <p class="center">Seller: {{ auction.seller.get_full_name }}</p>
+            <p class="center">{% trans "Seller" %}: {{ auction.seller.get_full_name }}</p>
             {% else %}
-            <p class="center">Seller: {{ auction.seller }}</p>
+            <p class="center">{% trans "Seller" %}: {{ auction.seller }}</p>
     {% endif %}
 
 
     {% if user == auction.seller %}
-        <p class="center"><a href="{% url "edit_auction" auction_id=auction.id %}">Edit Description</a></p>
+        <p class="center"><a href="{% url "edit_auction" auction_id=auction.id %}">{% trans "Edit Description" %}</a></p>
     {% endif %}
     {% if request.user.is_superuser and auction.status == auction.STATUS_ACTIVE%}
-        <p class="center"><a class="btn btn-danger" href="{% url "ban_auction" auction_id=auction.id %}">Ban this auction</a></p>
+        <p class="center"><a class="btn btn-danger" href="{% url "ban_auction" auction_id=auction.id %}">{% trans "Ban this auction" %}</a></p>
     {% endif %}
 
+
+<script>
+function hideShow(div) {
+    var x = document.getElementById(div);
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+</script>
 
 {% endblock %}

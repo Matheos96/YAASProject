@@ -12,7 +12,7 @@ class AuctionForm(forms.ModelForm):
         model = Auction
         fields = ('title', 'description', 'min_price', 'deadline')
         widgets = {
-            'deadline': DateTimePickerInput(format='%d.%m.%Y %H:%M:%S')
+            'deadline': DateTimePickerInput(format='%d.%m.%Y %H:%M')
         }
 
     def __init__(self, *args, **kwargs):

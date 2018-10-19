@@ -22,7 +22,7 @@
         {% endfor %}
     {% endif %}
 
-    {% for auction in auctions reversed %}
+    {% for auction in auctions %}
 
         <a href="{% url "auction_view" auction_id=auction.id %}"><h4><u>{{ auction.title }}</u></h4></a>
         <p class="center"><i>{{ auction.description }}</i></p>
@@ -32,6 +32,8 @@
             {% else %}
             <p class="center">{% trans "Seller" %}: {{ auction.seller }}</p>
         {% endif %}
+
+        <p class="center">{% trans "Deadline" %}: {{ auction.deadline }}</p>
 
         {% empty %}
             <h4>{% trans "No Auctions matching the criteria!" %}</h4>

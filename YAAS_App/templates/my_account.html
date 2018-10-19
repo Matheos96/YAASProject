@@ -1,33 +1,33 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load i18n %}
 
 {% block head %}
-    <title>YAAS | My Account</title>
+    <title>YAAS | {% trans "My Account" %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
 {% endblock %}
 
 {% block content %}
     {% if user.is_authenticated %}
-        <h1><u>My Account</u></h1>
+        <h1><u>{% trans "My Account" %}</u></h1>
         <br />
         <div id="acc_details">
-            <h3>Username: {{ user.username }}</h3>
-            <h3>Email: {{ user.email }}</h3>
-            <h3>First Name: {{ user.first_name }}</h3>
-            <h3>Last Name: {{ user.last_name }}</h3>
+            <h3>{% trans "Username" %}: {{ user.username }}</h3>
+            <h3>{% trans "Email" %}: {{ user.email }}</h3>
+            <h3>{% trans "First Name" %}: {{ user.first_name }}</h3>
+            <h3>{% trans "Last Name" %}: {{ user.last_name }}</h3>
             <br />
-            <h3><u>Edit Account</u></h3>
-            <p><a href="{% url "email_change" %}">Change Email Address</a></p>
-            <p><a href="{% url "password_change" %}">Change Password</a></p>
+            <h3><u>{% trans "Edit Account" %}</u></h3>
+            <p><a href="{% url "email_change" %}">{% trans "Change Email Address" %}</a></p>
+            <p><a href="{% url "password_change" %}">{% trans "Change Password" %}</a></p>
             <br />
-            <h3><u>My Auctions</u></h3>
+            <h3><u>{% trans "My Auctions" %}</u></h3>
             {% for auction in my_auctions reversed %}
                <p><a href="{% url "auction_view" auction_id=auction.id %}"><u>{{ auction.title }}</u></a></p>
             {% endfor %}
         </div>
         {% else %}
-        <h2>You are not logged in.</h2>
+        <h2>{% trans "You are not logged in" %}.</h2>
     {% endif %}
 
 

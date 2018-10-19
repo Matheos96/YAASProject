@@ -1,20 +1,21 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load static %}
+{% load i18n %}
 
 {% block head %}
-    <title>YAAS | My Account - Change Email Address</title>
+    <title>YAAS | {% trans "My Account" %} - {% trans "Change Email Address" %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}" />
 {% endblock %}
 
 {% block content %}
-    <h1>Change Email Address</h1>
+    <h1>{% trans "Change Email Address" %}</h1>
     {% if email_exists %}
-        <p class="error">The given email address is already registered!</p>
+        <p class="error">{% trans "The given email address is already registered" %}!</p>
     {% endif %}
 
     {% if emails_no_match %}
-        <p class="error">The two email addresses do not match!</p>
+        <p class="error">{% trans "The two email addresses do not match" %}!</p>
     {% endif %}
 
     {%  crispy form form.helper %}

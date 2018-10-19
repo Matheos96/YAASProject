@@ -1,16 +1,17 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load static %}
+{% load i18n %}
 
 
 {% block head %}
-    <title>YAAS | Edit Auction</title>
+    <title>YAAS | {% trans "Edit Auction" %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}" />
 {% endblock %}
 
 {% block content %}
 
-    <h1><u>Editing Auction "{{ form.title.value }}"</u></h1>
+    <h1><u>{% trans "Editing Auction" %} "{{ form.title.value }}"</u></h1>
 
     {% crispy form form.helper %}
 

@@ -5,7 +5,10 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.utils import translation
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.models import User
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializer import AuctionSerializer
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Q
@@ -91,7 +94,6 @@ def change_email(request):
 
 
 def register(request):
-    print(request.session[translation.LANGUAGE_SESSION_KEY])
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
@@ -137,7 +139,7 @@ def set_language(request, lang):
     translation.activate(locale)
     request.session[translation.LANGUAGE_SESSION_KEY] = locale
     print(request.session[translation.LANGUAGE_SESSION_KEY])
-    return render(request, "index.html")
+    return index(request)
 
 
 def set_user_lang(request, user):
@@ -151,6 +153,43 @@ def set_user_lang(request, user):
         user_lang.save()
     translation.activate(locale)
     request.session[translation.LANGUAGE_SESSION_KEY] = locale
+
+
+  # API STUFF
+
+@api_view(['GET', 'POST'])
+def auction_list(request, format=None):
+    if request.method == 'GET':
+        auctions = Auction.objects.all()
+        serializer = AuctionSerializer(auctions, many=True, context={'request': request})
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = AuctionSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def auction_detail(request, pk, format=None):
+    try:
+        auction = Auction.objects.get(pk=pk)
+    except AuctionSerializer.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = AuctionSerializer(auction, context={'request': request})
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = AuctionSerializer(auction, data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        auction.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # REMOVE THIS

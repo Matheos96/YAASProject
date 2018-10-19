@@ -8,7 +8,10 @@ from django.contrib import messages
 from django.db.models import Max
 from django.core import mail
 from django.views import View
+import datetime
 from django.contrib.auth.decorators import user_passes_test
+import json
+import urllib.request
 # Create your views here.
 
 
@@ -51,13 +54,23 @@ def confirm_form(request):
                 desc = cd['description']
                 min_price = cd['min_price']
                 deadline = cd['deadline']
-                auction = Auction(title=title, description=desc, min_price=min_price, deadline=deadline)
-                auction.seller = request.user
-                auction.save()
-                to_email = [request.user.email]
-                subject = "Auction " + title + " created!"
-                message = "Your auction " + title + " has been successfully created on the YAAS Web Application!"
-                send_email(subject, message, to_email)
+                deadline_dt = datetime.datetime.strptime(deadline, "%Y-%m-%d %H:%M:%S%z")
+                if (deadline_dt >= (timezone.now() + timedelta(hours=72))) and (float(min_price) >= 0):  # Check that the values are still valid
+                    auction = Auction(title=title, description=desc, min_price=min_price, deadline=deadline)
+                    auction.seller = request.user
+                    auction.save()
+                    to_email = [request.user.email]
+                    subject = "Auction " + title + " created!"
+                    message = "Your auction " + title + " has been successfully created on the YAAS Web Application!"
+                    send_email(subject, message, to_email)
+                else:
+                    form = AuctionForm(initial={'title': title, 'description': desc, 'min_price': min_price,
+                                                'deadline': deadline})
+                    if deadline_dt < (timezone.now() + timedelta(hours=72)):
+                        messages.error(request, "The deadline has to be at least 72 hours in the future!")
+                    if float(min_price) < 0:
+                        messages.error(request, "The minimum price has to be at least 0!")
+                    return render(request, "new_auction.html", {"form": form})
     return redirect("index")
 
 
@@ -76,7 +89,15 @@ class AuctionView(View):
             bid_form.helper.form_action = reverse("auction_view", kwargs={'auction_id': auction_id})
             request.session['description1'] = auction.description
             current_bid = get_max_bid(auction)
-            return render(request, "auction.html", {'auction': auction, 'bid_form': bid_form, "max_bid": current_bid})
+            bid_other_currencies = {'USD': '$0.00', 'GBP': '£0.00', 'CAD': 'CA$0.00'}
+            min_other_currencies = {'USD': '$0.00', 'GBP': '£0.00', 'CAD': 'CA$0.00'}
+            if auction.min_price>0:
+                min_other_currencies = calc_currencies(auction.min_price)
+            if current_bid is not None:
+                bid_other_currencies = calc_currencies(current_bid.amount)
+            return render(request, "auction.html", {'auction': auction, 'bid_form': bid_form, "max_bid": current_bid,
+                                                    'bid_other_currencies': bid_other_currencies,
+                                                    'min_other_currencies': min_other_currencies})
         except Auction.DoesNotExist:
             messages.warning(request, "There is no auction with that id!")
             return redirect("index")
@@ -97,9 +118,13 @@ class AuctionView(View):
                                 cmp = auction.min_price
                             else:
                                 cmp = curr_bid.amount
-                            if ((new_bid > cmp) and curr_bid is not None) or ((new_bid >= cmp) and cmp == auction.min_price):
+                            if ((new_bid > cmp) and curr_bid is not None) or ((new_bid >= cmp) and
+                                                                              cmp == auction.min_price and new_bid > 0):
                                 bid = Bid(bidder=request.user, auction=auction, amount=new_bid)
                                 bid.save()
+                                auction.winning_bid = bid
+                                auction.save()
+                                print(str(request.user.username) + " spara nu")
                                 send_email(auction.title+": New bid", bid.bidder.__str__() + " has placed a new bid of "
                                            + str(bid.amount) + "€ on your auction '"+auction.title + "'!",
                                            [auction.seller.email])
@@ -113,7 +138,7 @@ class AuctionView(View):
                             else:
                                 if cmp == auction.min_price:
                                     messages.warning(request, "Your bid has to be greater than or equal to the minimum"
-                                                              " price!")
+                                                              " price AND greater than zero!")
                                 else:
                                     messages.warning(request, "Your bid has to be greater than the currently winning "
                                                               "bid!")
@@ -126,8 +151,15 @@ class AuctionView(View):
                                         "and try to submit your bid again. ")
         else:
             messages.warning(request, "This auction is no longer active!")
-
-        return render(request, "auction.html", {'auction': auction, 'bid_form': bid_form, "max_bid": curr_bid})
+        bid_other_currencies = {'USD': '$0.00', 'GBP': '£0.00', 'CAD': 'CA$0.00'}
+        min_other_currencies = {'USD': '$0.00', 'GBP': '£0.00', 'CAD': 'CA$0.00'}
+        if auction.min_price > 0:
+            min_other_currencies = calc_currencies(auction.min_price)
+        if curr_bid is not None:
+            bid_other_currencies = calc_currencies(curr_bid.amount)
+        return render(request, "auction.html", {'auction': auction, 'bid_form': bid_form, "max_bid": curr_bid,
+                                                "bid_other_currencies": bid_other_currencies,
+                                                "min_other_currencies": min_other_currencies})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -191,3 +223,15 @@ def get_current_winner(auction):
     if current_max_bid is not None:
         return Bid.objects.filter(auction=auction, amount=current_max_bid).first().bidder  # Get the object
     return None
+
+
+def calc_currencies(eur):
+    req = urllib.request.Request('http://data.fixer.io/api/latest?access_key=11eeeae1a79825147e43036f8e3be744&symbols=USD,GBP,CAD&format=1&base=EUR')
+    response = urllib.request.urlopen(req).read()
+    json_r = json.loads(response.decode('utf-8'))
+    rates = json_r['rates']
+    dic = dict()
+    dic['USD'] = '$'+str(round(float(rates['USD']) * float(eur), 2))
+    dic['GBP'] = '£'+str(round(float(rates['GBP']) * float(eur), 2))
+    dic['CAD'] = 'CA$'+str(round(float(rates['CAD']) * float(eur), 2))
+    return dic

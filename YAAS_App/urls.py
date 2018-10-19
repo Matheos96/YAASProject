@@ -1,5 +1,6 @@
 from django.urls import path
 from YAAS_App.views import *
+from rest_framework.urlpatterns import format_suffix_patterns
 
 
 urlpatterns = [
@@ -12,6 +13,9 @@ urlpatterns = [
     path("change_email_address", change_email, name="email_change"),
     path("change_email_address/done", change_email_done, name="email_change_done"),
     path("setlang/<int:lang>", set_language, name="set_language"),
+    path("rest/auction/all", auction_list, name="auction-list"),
+    path('rest/auction/<int:pk>', auction_detail, name="auction-detail"),
     path('clear', delete_all)  # DEBUGGOMNG
 ]
 
+urlpatterns = format_suffix_patterns(urlpatterns)

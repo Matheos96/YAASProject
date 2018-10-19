@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load static %}
-
+{% load i18n %}
 
 {% block head %}
-    <title>YAAS | New Auction</title>
+    <title>YAAS | {% trans "New Auction" %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}" />
 {% endblock %}
 
 {% block content %}
 
-    <h1><u>New Auction</u></h1>
+    <h1><u>{% trans "New Auction" %}</u></h1>
     {% block extrahead %}   {# Extra Resources Start #}
    {{ form.media }}        {# Form required JS and CSS #}
    {% endblock %}          {# Extra Resources End #}

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from concurrency.fields import ConditionalVersionField
 # Create your models here.
 
 
@@ -17,6 +18,8 @@ class Auction(models.Model):
     deadline = models.DateTimeField(auto_now_add=False, auto_now=False)
     seller = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE, related_name='created_by')
     status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_ACTIVE)
+    winning_bid = models.ForeignKey('Bid', null=True, on_delete=models.CASCADE, related_name='winning_bid')
+    version = ConditionalVersionField('winning_bid')  # Handle concurrency
 
     def __str__(self):
         return self.title
