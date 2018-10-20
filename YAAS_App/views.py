@@ -18,6 +18,10 @@ import os
 import json
 from .models import *
 from Auctions.views import send_email
+from faker import Faker
+from random import *
+import datetime
+from django.utils.translation import ugettext_lazy as _
 # Create your views here.
 
 
@@ -44,7 +48,7 @@ def login_user(request):
                 return redirect("index")
             else:
                 print("INVALID LOGIN")
-                messages.error(request, "Invalid login information!")
+                messages.error(request, _("Invalid login information!"))
 
     else:
         form = LoginForm()
@@ -132,12 +136,12 @@ def set_language(request, lang):
             user_lang = UserLanguage.objects.get(user=request.user)
             user_lang.lang_pref = lang
             user_lang.save()
-            messages.info(request, "Your language setting has been updated!")
+            messages.info(request, _("Your language setting has been updated!"))
 
         except UserLanguage.DoesNotExist:
             user_lang = UserLanguage.objects.create(user=request.user, lang_pref=lang)
             user_lang.save()
-            messages.info(request, "Your language setting has been saved!")
+            messages.info(request, _("Your language setting has been saved!"))
 
     translation.activate(locale)
     request.session[translation.LANGUAGE_SESSION_KEY] = locale
@@ -235,10 +239,52 @@ def auction_detail(request, pk, format=None):
         return Response(data={"detail": "YOU HAVE TO BE LOGGED IN TO MAKE BIDS."})  # API Returns similar error
 
 
+@user_passes_test(lambda u: u.is_superuser)
+def generate_data(request):  # Data generation program
+    random_products = ['Computer', 'Raspberry Pi', 'iPhone', 'Television', 'Jam', 'Xbox', 'Playstation', 'Homework']
+    desc = "Very good product for sale. This product will make your life 200% better."
+    fake = Faker()
+    print("---Starting data generation program----\nGenerating 50 random users and one auction each")
+    n = 2
+    for _ in range(0, 50):
+        profile = fake.simple_profile()
+        user = User.objects.create_user(username=profile['username'], email=profile['mail'], password=fake.password())
+        user.first_name = profile['name'].split()[0]
+        user.last_name = profile['name'].split()[1]
+        user.save()
+        auction = Auction(seller=user, title=sample(random_products, 1)[0], description=desc,
+                          min_price=round(uniform(10, 500)),
+                          deadline=timezone.now()+datetime.timedelta(hours=(72+randint(0, 50))))
+        auction.save()
+        print(str(n)+"% done")
+        n = n+2
+    print("Generating complete.\nGenerating 50 random bids by random users on random auctions")
+    n = 2
+    for i in range(0, 50):
+        random_auction = sample(list(Auction.objects.all()), 1)[0]
+        random_user = sample(list(User.objects.all()), 1)[0]
+
+        winning_bid = 0
+        winner = 0
+        if random_auction.winning_bid is not None:
+            winning_bid = random_auction.winning_bid.amount
+            winner = random_auction.winning_bid.bidder
+        if random_user != random_auction.seller and random_user != winner:
+            if winning_bid == 0:
+                bid_amount = random_auction.min_price + round(uniform(1, 10))
+            else:
+                bid_amount = winning_bid + round(uniform(1, 10))
+            bid = Bid(bidder=random_user, amount=bid_amount, auction=random_auction)
+            bid.save()
+            random_auction.winning_bid = bid
+            random_auction.save()
+            print(str(n) + "% done")
+            n = n + 2
+    messages.info(request, "Data Generation done! Click on Home to see the results :)")
+    return render(request, "index.html")
 
 
 # REMOVE THIS
 def delete_all(self):
-    Auction.objects.all().delete()
-    print("ALL DELETED")
+    print(len(Auction.objects.all().ge))
     return redirect("index")

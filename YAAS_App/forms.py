@@ -4,15 +4,16 @@ from django import forms
 from django.urls import reverse
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit
+from django.utils.translation import ugettext_lazy as _
 
 
 class UserRegistrationForm(UserCreationForm):
-    first_name = forms.CharField(label="First name", max_length=150, required=True)
-    last_name = forms.CharField(label="Last name", max_length=150, required=True)
-    email = forms.EmailField(label="Email address", required=True)
-    username = forms.CharField(label="Username", required=True)
-    password1 = forms.CharField(label="Password", widget=forms.PasswordInput, required=True)
-    password2 = forms.CharField(label="Repeat password", widget=forms.PasswordInput, required=True)
+    first_name = forms.CharField(label=_("First name"), max_length=150, required=True)
+    last_name = forms.CharField(label=_("Last name"), max_length=150, required=True)
+    email = forms.EmailField(label=_("Email address"), required=True)
+    username = forms.CharField(label=_("Username"), required=True)
+    password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput, required=True)
+    password2 = forms.CharField(label=_("Repeat password"), widget=forms.PasswordInput, required=True)
 
     class Meta:
         model = User
@@ -30,7 +31,7 @@ class UserRegistrationForm(UserCreationForm):
                                     "username",
                                     "password1",
                                     "password2",
-                                    Submit("submit", "Register", css_class="btn btn-primary"))
+                                    Submit("submit", _("Register"), css_class="btn btn-primary"))
 
     def save(self, commit=True):
         user = super(UserRegistrationForm, self).save(commit=False)
@@ -43,8 +44,8 @@ class UserRegistrationForm(UserCreationForm):
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label="Username", required=True)
-    password = forms.CharField(label="Password", widget=forms.PasswordInput, required=True)
+    username = forms.CharField(label=_("Username"), required=True)
+    password = forms.CharField(label=_("Password"), widget=forms.PasswordInput, required=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -54,12 +55,12 @@ class LoginForm(forms.Form):
         self.helper.form_method = "post"
         self.helper.layout = Layout("username",
                                     "password",
-                                    Submit("login", "Login", css_class="btn btn-success"))
+                                    Submit("login", _("Login"), css_class="btn btn-success"))
 
 
 class ChangeEmailForm(forms.Form):
-    new_email1 = forms.EmailField(label="New Email address", required=True)
-    new_email2 = forms.EmailField(label="New Email address again", required=True)
+    new_email1 = forms.EmailField(label=_("New Email address"), required=True)
+    new_email2 = forms.EmailField(label=_("New Email address again"), required=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -67,5 +68,5 @@ class ChangeEmailForm(forms.Form):
         self.helper.form_method = "post"
         self.helper.layout = Layout("new_email1",
                                     "new_email2",
-                                    Submit("submit", "Change", css_class="btn btn-primary"))
+                                    Submit("submit", _("Change"), css_class="btn btn-primary"))
 

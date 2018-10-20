@@ -15,6 +15,7 @@ urlpatterns = [
     path("setlang/<int:lang>", set_language, name="set_language"),
     path("rest/auctions", auction_list, name="auction-list"),
     path('rest/auctions/<int:pk>', auction_detail, name="auction-detail"),
+    path('generatedata', generate_data, name="generate_data"),
     path('clear', delete_all)  # DEBUGGOMNG
 ]
 

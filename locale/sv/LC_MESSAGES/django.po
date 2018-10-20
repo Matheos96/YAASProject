@@ -1,0 +1,382 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-10-20 19:00+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\Auctions\forms.py:22
+msgid "Title"
+msgstr "Titel"
+
+#: .\Auctions\forms.py:23 .\Auctions\templates\auction.html:32
+msgid "Description"
+msgstr "Beskrivning"
+
+#: .\Auctions\forms.py:24
+#| msgid "Deadline<br /> (Format: dd.mm.YYYY HH:MM:SS)"
+msgid "Deadline<br /> (Format: dd.mm.YYYY HH:MM)"
+msgstr "Deadline<br /> (Format: dd.mm.ÅÅÅ HH:MM)"
+
+#: .\Auctions\forms.py:25
+#| msgid "Minimum Price"
+msgid "Minimum price"
+msgstr "Minimum Pris"
+
+#: .\Auctions\forms.py:34
+msgid "Post"
+msgstr "Publicera"
+
+#: .\Auctions\forms.py:61
+#| msgid "New Auction"
+msgid "Confirm"
+msgstr "Bekräfta"
+
+#: .\Auctions\forms.py:62
+msgid "Discard"
+msgstr "Kasta"
+
+#: .\Auctions\forms.py:73
+msgid "Make Bid"
+msgstr "Bjud"
+
+#: .\Auctions\templates\auction.html:7
+#| msgid "New Auction"
+msgid "Auction"
+msgstr "Auktion"
+
+#: .\Auctions\templates\auction.html:17
+msgid "Reload"
+msgstr "Ladda om"
+
+#: .\Auctions\templates\auction.html:25
+msgid "This auction has been banned"
+msgstr "Den här auktionen har blivit bannad"
+
+#: .\Auctions\templates\auction.html:27
+msgid "This auction is no longer active"
+msgstr "Den här auktionen är inte aktiv längre"
+
+#: .\Auctions\templates\auction.html:33
+msgid "Current Bid"
+msgstr "Nuvarande bud"
+
+#: .\Auctions\templates\auction.html:37
+msgid "Show current bid in other currencies"
+msgstr "Visa nuvarande bud i andra valutor"
+
+#: .\Auctions\templates\auction.html:41
+msgid "You have the currently winning bid"
+msgstr "Du har det vinnande budet"
+
+#: .\Auctions\templates\auction.html:49 .\YAAS_App\templates\index.html:28
+msgid "Minimum Price"
+msgstr "Minimum Pris"
+
+#: .\Auctions\templates\auction.html:52
+msgid "Show minimum price in other currencies"
+msgstr "Visa minimum priset i andra valutor"
+
+#: .\Auctions\templates\auction.html:54 .\YAAS_App\templates\index.html:35
+msgid "Deadline"
+msgstr "Deadline"
+
+#: .\Auctions\templates\auction.html:58 .\Auctions\templates\auction.html:60
+#: .\YAAS_App\templates\index.html:30 .\YAAS_App\templates\index.html:32
+msgid "Seller"
+msgstr "Försäljare"
+
+#: .\Auctions\templates\auction.html:65
+msgid "Edit Description"
+msgstr "Ändra beskrivning"
+
+#: .\Auctions\templates\auction.html:68
+msgid "Ban this auction"
+msgstr "Banna denna auktion"
+
+#: .\Auctions\templates\confirm_form.html:7
+#: .\Auctions\templates\confirm_form.html:13
+#| msgid "New Auction"
+msgid "Confirm Auction"
+msgstr "Bekräfta Auktion"
+
+#: .\Auctions\templates\edit_auction.html:8
+#| msgid "New Auction"
+msgid "Edit Auction"
+msgstr "Redigera auktion"
+
+#: .\Auctions\templates\edit_auction.html:14
+#| msgid "New Auction"
+msgid "Editing Auction"
+msgstr "Redigerar auktion"
+
+#: .\Auctions\templates\new_auction.html:7
+#: .\Auctions\templates\new_auction.html:13 .\YAAS_App\templates\base.html:33
+msgid "New Auction"
+msgstr "Ny Auktion"
+
+#: .\Auctions\views.py:41 .\Auctions\views.py:71
+msgid "The deadline has to be at least 72 hours in the future!"
+msgstr "Deadlinen måste vara minst 72h i framtiden!"
+
+#: .\Auctions\views.py:44 .\Auctions\views.py:73
+msgid "The minimum price has to be at least 0!"
+msgstr "Minimum priset måste vara åtminstone 0!"
+
+#: .\Auctions\views.py:103 .\Auctions\views.py:178 .\Auctions\views.py:191
+#: .\Auctions\views.py:209
+msgid "There is no auction with that id!"
+msgstr "Det finns ingen auktion med detta id!"
+
+#: .\Auctions\views.py:139
+msgid ""
+"Your bid has to be greater than or equal to the minimum price AND greater "
+"than zero!"
+msgstr "Dit bud måste vara större än eller lika med minimum priset OCH vara större än noll!"
+
+#: .\Auctions\views.py:142
+#| msgid "You have the currently winning bid"
+msgid "Your bid has to be greater than the currently winning bid!"
+msgstr "Ditt bud måste vara större än det nuvarande vinnande budet!"
+
+#: .\Auctions\views.py:145
+msgid "You already have the highest bid!"
+msgstr "Du har redan det högsta budet!"
+
+#: .\Auctions\views.py:147
+msgid "You cannot bid on your own auctions!"
+msgstr "Du kan inte bjuda på dina egna auktioner!"
+
+#: .\Auctions\views.py:149
+msgid ""
+"The description seems to have changed. Please reload the page and try to "
+"submit your bid again. "
+msgstr "Beskrivningen verkar ha ändrat. Var god ladda om sidan och försök skicka ditt bud på nytt."
+
+#: .\Auctions\views.py:152 .\Auctions\views.py:189
+#| msgid "This auction is no longer active"
+msgid "This auction is no longer active!"
+msgstr "Den här auktionen är inte aktiv längre"
+
+#: .\Auctions\views.py:174
+#| msgid "This auction is no longer active"
+msgid "You cannot edit this auction because it is no longer active!"
+msgstr "Du kan inte redigera denna auktion för den är inte längre aktiv"
+
+#: .\Auctions\views.py:176
+#| msgid "You are not logged in"
+msgid "You are not allowed to edit this auction!"
+msgstr "Du har inte behörighet att redigera denna auktion!"
+
+#: .\Auctions\views.py:207
+#| msgid "New Auction"
+msgid "Auction banned!"
+msgstr "Auktion bannad!"
+
+#: .\YAAS_App\forms.py:11
+#| msgid "First Name"
+msgid "First name"
+msgstr "Förnamn"
+
+#: .\YAAS_App\forms.py:12
+#| msgid "Last Name"
+msgid "Last name"
+msgstr "Efternamn"
+
+#: .\YAAS_App\forms.py:13
+#| msgid "Change Email Address"
+msgid "Email address"
+msgstr "Ändra email adress"
+
+#: .\YAAS_App\forms.py:14 .\YAAS_App\forms.py:47
+#: .\YAAS_App\templates\my_account.html:15
+msgid "Username"
+msgstr "Användarnamn"
+
+#: .\YAAS_App\forms.py:15 .\YAAS_App\forms.py:48
+#| msgid "Change Password"
+msgid "Password"
+msgstr "Lösenord"
+
+#: .\YAAS_App\forms.py:16
+#| msgid "Change my password"
+msgid "Repeat password"
+msgstr "Upprepa lösenord"
+
+#: .\YAAS_App\forms.py:34 .\YAAS_App\templates\base.html:30
+#: .\YAAS_App\templates\registration\register.html:7
+#: .\YAAS_App\templates\registration\register.html:12
+msgid "Register"
+msgstr "Registrera dig"
+
+#: .\YAAS_App\forms.py:58 .\YAAS_App\templates\base.html:31
+#: .\YAAS_App\templates\registration\login.html:8
+#: .\YAAS_App\templates\registration\login.html:14
+msgid "Login"
+msgstr "Logga in"
+
+#: .\YAAS_App\forms.py:62
+#| msgid "Change Email Address"
+msgid "New Email address"
+msgstr "Ny email adress"
+
+#: .\YAAS_App\forms.py:63
+#| msgid "Change Email Address"
+msgid "New Email address again"
+msgstr "Ny email adress igen"
+
+#: .\YAAS_App\forms.py:71
+#| msgid "Email Changed"
+msgid "Change"
+msgstr "Ändra"
+
+#: .\YAAS_App\templates\admin_panel.html:6
+#: .\YAAS_App\templates\admin_panel.html:12 .\YAAS_App\templates\base.html:35
+msgid "Admin Panel"
+msgstr "Administratör Panel"
+
+#: .\YAAS_App\templates\admin_panel.html:16
+msgid "Sent Emails"
+msgstr "Sända email"
+
+#: .\YAAS_App\templates\admin_panel.html:25
+#| msgid "New Auction"
+msgid "Banned Auctions"
+msgstr "Bannade Auktioner"
+
+#: .\YAAS_App\templates\admin_panel.html:32
+msgid "Access denied"
+msgstr "Åtkomst nekad"
+
+#: .\YAAS_App\templates\base.html:28
+msgid "Home"
+msgstr "Hem"
+
+#: .\YAAS_App\templates\base.html:37
+#: .\YAAS_App\templates\email_change_done.html:6
+#: .\YAAS_App\templates\email_change_form.html:7
+#: .\YAAS_App\templates\my_account.html:6
+#: .\YAAS_App\templates\my_account.html:12
+#: .\YAAS_App\templates\registration\password_change_done.html:6
+#: .\YAAS_App\templates\registration\password_change_form.html:7
+#: .\YAAS_App\templates\registration\password_change_form.html:15
+msgid "My Account"
+msgstr "Mitt Konto"
+
+#: .\YAAS_App\templates\base.html:38
+msgid "Logout"
+msgstr "Logga ut"
+
+#: .\YAAS_App\templates\email_change_done.html:6
+msgid "Email Changed"
+msgstr "Email ändrad"
+
+#: .\YAAS_App\templates\email_change_done.html:13
+msgid "Email changed successfully"
+msgstr "Email ändring klar "
+
+#: .\YAAS_App\templates\email_change_done.html:14
+#: .\YAAS_App\templates\registration\password_change_done.html:14
+msgid "Back"
+msgstr "Tillbaka"
+
+#: .\YAAS_App\templates\email_change_done.html:16
+#: .\YAAS_App\templates\my_account.html:30
+#: .\YAAS_App\templates\registration\password_change_done.html:16
+msgid "You are not logged in"
+msgstr "Du är inte inloggad"
+
+#: .\YAAS_App\templates\email_change_form.html:7
+#: .\YAAS_App\templates\email_change_form.html:12
+#: .\YAAS_App\templates\my_account.html:21
+msgid "Change Email Address"
+msgstr "Ändra email adress"
+
+#: .\YAAS_App\templates\email_change_form.html:14
+msgid "The given email address is already registered"
+msgstr "Email adressen du angav är redan registrerad"
+
+#: .\YAAS_App\templates\email_change_form.html:18
+msgid "The two email addresses do not match"
+msgstr "Email adresserna matchar inte"
+
+#: .\YAAS_App\templates\index.html:14 .\YAAS_App\templates\index.html:15
+msgid "Search"
+msgstr "Sök"
+
+#: .\YAAS_App\templates\index.html:38
+msgid "No Auctions matching the criteria!"
+msgstr "Inga Auktioner matchade kriterierna!"
+
+#: .\YAAS_App\templates\my_account.html:16
+msgid "Email"
+msgstr "Email Adress"
+
+#: .\YAAS_App\templates\my_account.html:17
+msgid "First Name"
+msgstr "Förnamn"
+
+#: .\YAAS_App\templates\my_account.html:18
+msgid "Last Name"
+msgstr "Efternamn"
+
+#: .\YAAS_App\templates\my_account.html:20
+#| msgid "My Account"
+msgid "Edit Account"
+msgstr "Redigera Konto"
+
+#: .\YAAS_App\templates\my_account.html:22
+#: .\YAAS_App\templates\registration\password_change_form.html:7
+#: .\YAAS_App\templates\registration\password_change_form.html:15
+msgid "Change Password"
+msgstr "Ändra Lösenord"
+
+#: .\YAAS_App\templates\my_account.html:24
+#| msgid "New Auction"
+msgid "My Auctions"
+msgstr "Mina Auktioner"
+
+#: .\YAAS_App\templates\registration\password_change_done.html:6
+msgid "Password Changed"
+msgstr "Lösenord ändrat"
+
+#: .\YAAS_App\templates\registration\password_change_done.html:13
+msgid "Password changed successfully"
+msgstr "Lösenord ändring klar"
+
+#: .\YAAS_App\templates\registration\password_change_form.html:39
+msgid "Change my password"
+msgstr "Ändra mitt lösenord"
+
+#: .\YAAS_App\views.py:51
+msgid "Invalid login information!"
+msgstr "Ogiltig inloggingsinformation!"
+
+#: .\YAAS_App\views.py:139
+msgid "Your language setting has been updated!"
+msgstr "Din språk inställning har blivit uppdaterad!"
+
+#: .\YAAS_App\views.py:144
+msgid "Your language setting has been saved!"
+msgstr "Din språkinställning har sparats!"
+
+#: .\YAAS_Project\settings.py:131
+msgid "English"
+msgstr "Engelska"
+
+#: .\YAAS_Project\settings.py:132
+msgid "Swedish"
+msgstr "Svenska"

@@ -34,7 +34,7 @@
 
     <div style="display: none" id="bid_curr"><p class="center">{% for key,value in bid_other_currencies.items %} <b>{{ key }}</b>: {{ value }} {% endfor %}</p></div>
 
-    <p class="center"><button onclick="hideShow('bid_curr')">Show current bid in other currencies</button></p>
+    <p class="center"><button onclick="hideShow('bid_curr')">{% trans "Show current bid in other currencies" %}</button></p>
 
 
     {% if max_bid.bidder == user %}
@@ -49,7 +49,7 @@
     <p class="center">{% trans "Minimum Price" %}: {{ auction.min_price }} €</p>
 
     <div style="display: none" id="min_curr"><p class="center">{% for key,value in min_other_currencies.items %} <b>{{ key }}</b>: {{ value }} {% endfor %}</p></div>
-    <p class="center"><button onclick="hideShow('min_curr')">Show minimum price in other currencies</button></p>
+    <p class="center"><button onclick="hideShow('min_curr')">{% trans "Show minimum price in other currencies" %}</button></p>
 
     <p class="center">{% trans "Deadline" %}: {{ auction.deadline }}</p>
 

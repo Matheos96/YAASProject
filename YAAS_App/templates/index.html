@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block head %}
-    <title>YAAS | HOME</title>
+    <title>YAAS | {% trans "Home" %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
 {% endblock %}
 
@@ -25,7 +25,6 @@
     {% for auction in auctions %}
 
         <a href="{% url "auction_view" auction_id=auction.id %}"><h4><u>{{ auction.title }}</u></h4></a>
-        <p class="center"><i>{{ auction.description }}</i></p>
         <p class="center"><i>{% trans "Minimum Price" %}: {{ auction.min_price }} €</i></p>
         {% if auction.seller.get_full_name %}
             <p class="center">{% trans "Seller" %}: {{ auction.seller.get_full_name }}</p>

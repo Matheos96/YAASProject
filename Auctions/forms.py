@@ -4,6 +4,7 @@ from django.urls import reverse
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit
 from bootstrap_datepicker_plus import DateTimePickerInput
+from django.utils.translation import ugettext_lazy as _
 
 
 class AuctionForm(forms.ModelForm):
@@ -18,8 +19,10 @@ class AuctionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['deadline'].label = 'Deadline<br /> (Format: dd.mm.YYYY HH:MM:SS)'
-        self.fields['min_price'].label = 'Minimum price'
+        self.fields['title'].label = _('Title')
+        self.fields['description'].label = _('Description')
+        self.fields['deadline'].label = _('Deadline<br /> (Format: dd.mm.YYYY HH:MM)')
+        self.fields['min_price'].label = _('Minimum price')
 
         self.helper = FormHelper
         self.helper.form_action = reverse("new_auction")
@@ -28,7 +31,7 @@ class AuctionForm(forms.ModelForm):
                                     "description",
                                     "min_price",
                                     "deadline",
-                                    Submit("post", "Post", css_class="btn btn-primary"))
+                                    Submit("post", _("Post"), css_class="btn btn-primary"))
 
 
 class EditAuctionForm(AuctionForm):
@@ -55,8 +58,8 @@ class ConfirmForm(forms.Form):
                                     "description",
                                     "min_price",
                                     "deadline",
-                                    Submit("yes", "Confirm", css_class="btn btn-success"),
-                                    Submit("no", "Discard", css_class="btn btn-warning"))
+                                    Submit("yes", _("Confirm"), css_class="btn btn-success"),
+                                    Submit("no", _("Discard"), css_class="btn btn-warning"))
 
 
 class MakeBidForm(forms.Form):
@@ -67,6 +70,6 @@ class MakeBidForm(forms.Form):
         self.helper = FormHelper
         self.helper.form_method = "post"
         self.helper.layout = Layout("bid",
-                                    Submit("make_bid", "Make Bid", css_class="btn btn-primary"))
+                                    Submit("make_bid", _("Make Bid"), css_class="btn btn-primary"))
 
 

@@ -12,6 +12,7 @@ import datetime
 from django.contrib.auth.decorators import user_passes_test
 import json
 import urllib.request
+from django.utils.translation import ugettext_lazy as _
 # Create your views here.
 
 
@@ -37,10 +38,10 @@ class AddAuction(View):
             else:
                 if deadline < (timezone.now() + timedelta(hours=72)):
                     messages.add_message(request, messages.ERROR,
-                                         "The deadline has to be at least 72 hours in the future!")
+                                         _("The deadline has to be at least 72 hours in the future!"))
                 if min_price < 0:
                     messages.add_message(request, messages.ERROR,
-                                         "The minimum price has to be at least 0!")
+                                         _("The minimum price has to be at least 0!"))
         return render(request, "new_auction.html", {"form": form})
 
 
@@ -67,9 +68,9 @@ def confirm_form(request):
                     form = AuctionForm(initial={'title': title, 'description': desc, 'min_price': min_price,
                                                 'deadline': deadline})
                     if deadline_dt < (timezone.now() + timedelta(hours=72)):
-                        messages.error(request, "The deadline has to be at least 72 hours in the future!")
+                        messages.error(request, _("The deadline has to be at least 72 hours in the future!"))
                     if float(min_price) < 0:
-                        messages.error(request, "The minimum price has to be at least 0!")
+                        messages.error(request, _("The minimum price has to be at least 0!"))
                     return render(request, "new_auction.html", {"form": form})
     return redirect("index")
 
@@ -99,7 +100,7 @@ class AuctionView(View):
                                                     'bid_other_currencies': bid_other_currencies,
                                                     'min_other_currencies': min_other_currencies})
         except Auction.DoesNotExist:
-            messages.warning(request, "There is no auction with that id!")
+            messages.warning(request, _("There is no auction with that id!"))
             return redirect("index")
 
     def post(self, request, auction_id):
@@ -135,20 +136,20 @@ class AuctionView(View):
                                 bid_form.helper.form_action = reverse("auction_view", kwargs={'auction_id': auction_id})
                             else:
                                 if cmp == auction.min_price:
-                                    messages.warning(request, "Your bid has to be greater than or equal to the minimum"
-                                                              " price AND greater than zero!")
+                                    messages.warning(request, _("Your bid has to be greater than or equal to the "
+                                                                "minimum price AND greater than zero!"))
                                 else:
-                                    messages.warning(request, "Your bid has to be greater than the currently winning "
-                                                              "bid!")
+                                    messages.warning(request, _("Your bid has to be greater than the currently winning "
+                                                                "bid!"))
                     else:
-                        messages.warning(request, "You already have the highest bid!")
+                        messages.warning(request, _("You already have the highest bid!"))
                 else:
-                    messages.warning(request, "You cannot bid on your own auctions!")
+                    messages.warning(request, _("You cannot bid on your own auctions!"))
             else:
-                messages.error(request, "The description seems to have changed. Please reload the page "
-                                        "and try to submit your bid again. ")
+                messages.error(request, _("The description seems to have changed. Please reload the page "
+                                          "and try to submit your bid again. "))
         else:
-            messages.warning(request, "This auction is no longer active!")
+            messages.warning(request, _("This auction is no longer active!"))
         bid_other_currencies = {'USD': '$0.00', 'GBP': '£0.00', 'CAD': 'CA$0.00'}
         min_other_currencies = {'USD': '$0.00', 'GBP': '£0.00', 'CAD': 'CA$0.00'}
         if auction.min_price > 0:
@@ -170,11 +171,11 @@ class EditAuction(View):
                     form = EditAuctionForm(instance=auction)
                     return render(request, "edit_auction.html", {"form": form})
                 else:
-                    messages.warning(request, "You cannot edit this auction because it is no longer active!")
+                    messages.warning(request, _("You cannot edit this auction because it is no longer active!"))
             else:
-                messages.warning(request, "You are not allowed to edit this auction!")
+                messages.warning(request, _("You are not allowed to edit this auction!"))
         except Auction.DoesNotExist:
-            messages.warning(request, "There is no auction with that id!")
+            messages.warning(request, _("There is no auction with that id!"))
         return redirect("index")
 
     def post(self, request, auction_id):
@@ -185,9 +186,9 @@ class EditAuction(View):
                 auction.save()
                 return redirect("auction_view", auction_id=auction_id)
             else:
-                messages.warning(request, "This auction is no longer active!")
+                messages.warning(request, _("This auction is no longer active!"))
         else:
-            messages.warning(request, "There is no auction with that id!")
+            messages.warning(request, _("There is no auction with that id!"))
         return redirect("index")
 
 
@@ -203,9 +204,9 @@ def ban_auction(request, auction_id):
                                                                     "auction " + auction.title + "has been banned from "
                                                                                                  "the YAAS site.",
                    emails)
-        messages.warning(request, "Auction banned!")
+        messages.warning(request, _("Auction banned!"))
         return render(request, "auction.html", {'auction': auction})
-    messages.warning(request, "There is no auction with that id!")
+    messages.warning(request, _("There is no auction with that id!"))
     return redirect("index")
 
 
