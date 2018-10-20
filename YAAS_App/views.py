@@ -1,20 +1,23 @@
 from django.shortcuts import render, redirect
 from YAAS_App.forms import *
-from Auctions.models import Auction
+from Auctions.models import Auction, Bid
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.utils import translation
 from django.contrib.auth.decorators import user_passes_test
 from rest_framework import viewsets, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from .serializer import AuctionSerializer
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Q
 from django.conf import settings
 import os
+import json
 from .models import *
+from Auctions.views import send_email
 # Create your views here.
 
 
@@ -157,21 +160,20 @@ def set_user_lang(request, user):
 
   # API STUFF
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def auction_list(request, format=None):
     if request.method == 'GET':
-        auctions = Auction.objects.all()
+        query = request.GET.get('q')
+        if query is not None:
+            auctions = Auction.objects.filter(Q(title__icontains=query), deadline__gte=timezone.now(),
+                                              status=Auction.STATUS_ACTIVE)
+        else:
+            auctions = Auction.objects.all()
         serializer = AuctionSerializer(auctions, many=True, context={'request': request})
         return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = AuctionSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'POST'])
 def auction_detail(request, pk, format=None):
     try:
         auction = Auction.objects.get(pk=pk)
@@ -181,15 +183,58 @@ def auction_detail(request, pk, format=None):
     if request.method == 'GET':
         serializer = AuctionSerializer(auction, context={'request': request})
         return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = AuctionSerializer(auction, data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        auction.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    elif request.method == 'POST':
+        if request.user.is_authenticated:
+            if auction.status == Auction.STATUS_ACTIVE:
+                if auction.seller != request.user:
+                    curr_bid = auction.winning_bid
+                    curr_amount = 0.00
+                    compare = 0
+                    if curr_bid is not None:
+                        curr_amount = curr_bid.amount
+                        compare = curr_bid.bidder
+                    if compare != request.user:
+                        data = request.body
+                        try:
+                            json_r = json.loads(data.decode('utf-8'))
+                        except json.decoder.JSONDecodeError:
+                            json_r = {}
+                        if 'bid' not in json_r:
+                            return Response(data={"detail": "You have to specify your bid in the json format using "
+                                                            "'bid' as key and the value in decimal or integer form "
+                                                            "(no quotes)"})
+                        new_bid = json_r['bid']
+                        if type(new_bid) == int or type(new_bid) == float:
+                            if new_bid >= auction.min_price and new_bid > curr_amount:
+                                bid = Bid(bidder=request.user, auction=auction, amount=new_bid)
+                                bid.save()
+                                auction.winning_bid = bid
+                                auction.save()
+                                send_email(auction.title + ": New bid",
+                                           bid.bidder.__str__() + " has placed a new bid of "
+                                           + str(bid.amount) + "€ on your auction '" + auction.title + "'!",
+                                           [auction.seller.email])
+                                if curr_bid is not None:
+                                    send_email(auction.title + ": New bid",
+                                               "You have been overbid on the auction '" + auction.title + "'!",
+                                               [curr_bid.bidder.email])
+                                return Response(data={"detail": "Bid made successfully!"})
+                            else:
+                                return Response(data={"detail": "Your bid has to be greater than the minimum price and "
+                                                                "the current bid!"})
+
+                        else:
+                            return Response(data={"detail": "Your bid amount has to be specified in decimal or "
+                                                            "integer form!"})
+                    else:
+                        return Response(data={"detail": "You are already winning this auction!"})
+                else:
+                    return Response(data={"detail": "You cannot bid on your own auction!"})
+            else:
+                return Response(data={"detail": "This auction is no longer active."})
+        return Response(data={"detail": "YOU HAVE TO BE LOGGED IN TO MAKE BIDS."})  # API Returns similar error
+
+
 
 
 # REMOVE THIS

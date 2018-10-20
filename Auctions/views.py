@@ -107,7 +107,6 @@ class AuctionView(View):
         auction = Auction.objects.get(id=auction_id)
         current_winner = get_current_winner(auction)
         curr_bid = get_max_bid(auction)
-        #  Check if description changed?
         if auction.status == Auction.STATUS_ACTIVE:
             if request.session['description1'] == auction.description:
                 if auction.seller != request.user:
@@ -124,7 +123,6 @@ class AuctionView(View):
                                 bid.save()
                                 auction.winning_bid = bid
                                 auction.save()
-                                print(str(request.user.username) + " spara nu")
                                 send_email(auction.title+": New bid", bid.bidder.__str__() + " has placed a new bid of "
                                            + str(bid.amount) + "€ on your auction '"+auction.title + "'!",
                                            [auction.seller.email])
