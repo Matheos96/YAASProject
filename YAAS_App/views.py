@@ -6,9 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils import translation
 from django.contrib.auth.decorators import user_passes_test
 from rest_framework import viewsets, status
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from .serializer import AuctionSerializer
 from django.contrib import messages
 from django.utils import timezone
@@ -22,6 +21,7 @@ from faker import Faker
 from random import *
 import datetime
 from django.utils.translation import ugettext_lazy as _
+from concurrency.exceptions import RecordModifiedError
 # Create your views here.
 
 
@@ -164,6 +164,10 @@ def set_user_lang(request, user):
 
   # API STUFF
 
+
+def api_about(request):
+    return render(request, "api_about.html")
+
 @api_view(['GET'])
 def auction_list(request, format=None):
     if request.method == 'GET':
@@ -186,52 +190,65 @@ def auction_detail(request, pk, format=None):
 
     if request.method == 'GET':
         serializer = AuctionSerializer(auction, context={'request': request})
+        request.session['description1'] = auction.description
         return Response(serializer.data)
     elif request.method == 'POST':
         if request.user.is_authenticated:
             if auction.status == Auction.STATUS_ACTIVE:
                 if auction.seller != request.user:
-                    curr_bid = auction.winning_bid
-                    curr_amount = 0.00
-                    compare = 0
-                    if curr_bid is not None:
-                        curr_amount = curr_bid.amount
-                        compare = curr_bid.bidder
-                    if compare != request.user:
-                        data = request.body
-                        try:
-                            json_r = json.loads(data.decode('utf-8'))
-                        except json.decoder.JSONDecodeError:
-                            json_r = {}
-                        if 'bid' not in json_r:
-                            return Response(data={"detail": "You have to specify your bid in the json format using "
-                                                            "'bid' as key and the value in decimal or integer form "
-                                                            "(no quotes)"})
-                        new_bid = json_r['bid']
-                        if type(new_bid) == int or type(new_bid) == float:
-                            if new_bid >= auction.min_price and new_bid > curr_amount:
-                                bid = Bid(bidder=request.user, auction=auction, amount=new_bid)
-                                bid.save()
-                                auction.winning_bid = bid
-                                auction.save()
-                                send_email(auction.title + ": New bid",
-                                           bid.bidder.__str__() + " has placed a new bid of "
-                                           + str(bid.amount) + "€ on your auction '" + auction.title + "'!",
-                                           [auction.seller.email])
-                                if curr_bid is not None:
-                                    send_email(auction.title + ": New bid",
-                                               "You have been overbid on the auction '" + auction.title + "'!",
-                                               [curr_bid.bidder.email])
-                                return Response(data={"detail": "Bid made successfully!"})
-                            else:
-                                return Response(data={"detail": "Your bid has to be greater than the minimum price and "
-                                                                "the current bid!"})
+                    if auction.description == request.session.get('description1', "nothing"):
+                        curr_bid = auction.winning_bid
+                        curr_amount = 0.00
+                        compare = 0
+                        if curr_bid is not None:
+                            curr_amount = curr_bid.amount
+                            compare = curr_bid.bidder
+                        if compare != request.user:
+                            data = request.body
+                            try:
+                                json_r = json.loads(data.decode('utf-8'))
+                            except json.decoder.JSONDecodeError:
+                                json_r = {}
+                            if 'bid' not in json_r:
+                                return Response(data={"detail": "You have to specify your bid in the json format using "
+                                                                "'bid' (use double quotes) as key and the value in "
+                                                                "decimal or integer form "
+                                                                "(no quotes)"})
+                            new_bid = json_r['bid']
+                            if type(new_bid) == int or type(new_bid) == float:
+                                new_bid = new_bid*100
+                                new_bid = int(new_bid)  # Chop of extra decimals
+                                new_bid = new_bid/100.0
+                                if new_bid >= auction.min_price and new_bid > curr_amount:
+                                    bid = Bid(bidder=request.user, auction=auction, amount=new_bid)
+                                    bid.save()
+                                    auction.winning_bid = bid
+                                    try:
+                                        auction.save()
+                                        send_email(auction.title + ": New bid",
+                                                   bid.bidder.__str__() + " has placed a new bid of "
+                                                   + str(bid.amount) + "€ on your auction '" + auction.title + "'!",
+                                                   [auction.seller.email])
+                                        if curr_bid is not None:
+                                            send_email(auction.title + ": New bid",
+                                                       "You have been overbid on the auction '" + auction.title + "'!",
+                                                       [curr_bid.bidder.email])
+                                        return Response(data={"detail": "Bid made successfully!"})
+                                    except RecordModifiedError:
+                                        return Response(data={"detail": "Someone else bid before you. GET the page to "
+                                                                        "view the new bid and try bidding again!"})
+                                else:
+                                    return Response(data={"detail": "Your bid has to be greater than the minimum price and "
+                                                                    "the current bid!"})
 
+                            else:
+                                return Response(data={"detail": "Your bid amount has to be specified in decimal or "
+                                                                "integer form!"})
                         else:
-                            return Response(data={"detail": "Your bid amount has to be specified in decimal or "
-                                                            "integer form!"})
+                            return Response(data={"detail": "You are already winning this auction!"})
                     else:
-                        return Response(data={"detail": "You are already winning this auction!"})
+                        return Response(data={"detail": "The description seems to have changed. Please GET the specific"
+                                                        "auction again before retrying."})
                 else:
                     return Response(data={"detail": "You cannot bid on your own auction!"})
             else:

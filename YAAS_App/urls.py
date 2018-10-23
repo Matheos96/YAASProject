@@ -16,6 +16,8 @@ urlpatterns = [
     path("rest/auctions", auction_list, name="auction-list"),
     path('rest/auctions/<int:pk>', auction_detail, name="auction-detail"),
     path('generatedata', generate_data, name="generate_data"),
+    path('api', api_about, name="api_about"),
+    path('rest-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('clear', delete_all)  # DEBUGGOMNG
 ]
 

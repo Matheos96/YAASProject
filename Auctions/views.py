@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import user_passes_test
 import json
 import urllib.request
 from django.utils.translation import ugettext_lazy as _
+from concurrency.exceptions import RecordModifiedError
 # Create your views here.
 
 
@@ -30,9 +31,10 @@ class AddAuction(View):
             desc = cd['description']
             min_price = cd['min_price']
             deadline = cd['deadline']
-            if (deadline >= (timezone.now() + timedelta(hours=72))) and (min_price >= 0):
+            if (deadline >= (timezone.localtime() + timedelta(hours=72))) and (min_price >= 0):
                 conform = ConfirmForm(initial={"title": title, "description": desc, "min_price": min_price,
                                                "deadline": deadline})
+
                 return render(request, "confirm_form.html", {"form": conform})
 
             else:
@@ -56,7 +58,7 @@ def confirm_form(request):
                 min_price = cd['min_price']
                 deadline = cd['deadline']
                 deadline_dt = datetime.datetime.strptime(deadline, "%Y-%m-%d %H:%M:%S%z")
-                if (deadline_dt >= (timezone.now() + timedelta(hours=72))) and (float(min_price) >= 0):  # Check that the values are still valid
+                if (deadline_dt >= (timezone.localtime() + timedelta(hours=72))) and (float(min_price) >= 0):  # Check that the values are still valid
                     auction = Auction(title=title, description=desc, min_price=min_price, deadline=deadline)
                     auction.seller = request.user
                     auction.save()
@@ -79,7 +81,6 @@ def send_email(subject, message, to_email):
     from_email = "YAASAuctionSite@noreply.com"
     with mail.get_connection() as connection:
         mail.EmailMessage(subject, message, from_email, to_email, connection=connection).send(fail_silently=False)
-        print("mail sent")
 
 
 class AuctionView(View):
@@ -123,17 +124,25 @@ class AuctionView(View):
                                 bid = Bid(bidder=request.user, auction=auction, amount=new_bid)
                                 bid.save()
                                 auction.winning_bid = bid
-                                auction.save()
-                                send_email(auction.title+": New bid", bid.bidder.__str__() + " has placed a new bid of "
-                                           + str(bid.amount) + "€ on your auction '"+auction.title + "'!",
-                                           [auction.seller.email])
-                                if current_winner is not None:
+                                # Handle concurrency
+                                try:
+                                    auction.save()
                                     send_email(auction.title + ": New bid",
-                                               "You have been overbid on the auction '" + auction.title + "'!",
-                                               [current_winner.email])
-                                curr_bid = bid
-                                bid_form = MakeBidForm()
-                                bid_form.helper.form_action = reverse("auction_view", kwargs={'auction_id': auction_id})
+                                               bid.bidder.__str__() + " has placed a new bid of "
+                                               + str(bid.amount) + "€ on your auction '" + auction.title + "'!",
+                                               [auction.seller.email])
+                                    if current_winner is not None:
+                                        send_email(auction.title + ": New bid",
+                                                   "You have been overbid on the auction '" + auction.title + "'!",
+                                                   [current_winner.email])
+                                    curr_bid = bid
+                                    bid_form = MakeBidForm()
+                                    bid_form.helper.form_action = reverse("auction_view",
+                                                                          kwargs={'auction_id': auction_id})
+                                except RecordModifiedError:
+                                    bid.delete()  # Delete the bid if concurrency error occurs
+                                    messages.warning(request, _('Someone bid before you. Try again!'))
+
                             else:
                                 if cmp == auction.min_price:
                                     messages.warning(request, _("Your bid has to be greater than or equal to the "
