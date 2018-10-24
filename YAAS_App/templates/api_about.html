@@ -11,17 +11,17 @@
 
     <h1><u>{% trans "API" %}</u></h1>
 
-    <p class="center">Our site has an REST API Available for use. You can use the web interface available at <a href="{% url "auction-list" %}"> <i>/rest/auctions</i></a> or any other client.<br /><br />
-    <u>For all users</u><br />
-    To get all auctions send a GET request to <i>/rest/auctions</i><br />
-    To search for an auctions send a GET request to <i>/rest/auctions?q=searchword</i><br />
-    To get a specific auction send a GET request to <i>/rest/auctions/id</i> where id is the auction id<br />
+    <p class="center">{% trans "Our site has an REST API Available for use. You can use the web interface available at" %} <a href="{% url "auction-list" %}"> <i>/rest/auctions</i></a> {% trans "or any other client" %}.<br /><br />
+    <u>{% trans "For all users" %}</u><br />
+    {% trans "To get all auctions send a GET request to" %} <i>/rest/auctions</i><br />
+    {% trans "To search for auctions, send a GET request to" %} <i>/rest/auctions?q=searchword</i><br />
+    {% trans "To get a specific auction send a GET request to" %} <i>/rest/auctions/id</i> {% trans "where id is the auction id" %}<br />
     <br />
-    <u>For Registered Users Only</u><br />
-    You have to specify your login credentials in your request (Basic Authentication)<br/> <br>
-    To bid on an auction, first GET the specific auction using <i>/rest/auction/id</i> where id is the auction id,<br />
-    then send a POST request to the same URL with json content <i>{"bid": amount}</i> attached, where amount is an integer
-        or decimal number (Only two decimal points will be considered)<br />
+    <u>{% trans "For Registered Users Only" %}</u><br />
+    {% trans "You have to specify your login credentials in your request" %} (Basic Authentication)<br/> <br>
+    {% trans "To bid on an auction, first GET the specific auction using" %} <i>/rest/auction/id</i> {% trans "where id is the auction id" %},<br />
+    {% trans "then send a POST request to the same URL with json content" %} <i>{"bid": amount}</i> {% trans "attached, where amount is an integer" %}
+        {% trans "or decimal number (Only two decimal points will be considered)" %}<br />
         </p>
 
 

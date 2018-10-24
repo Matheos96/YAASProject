@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-20 19:00+0300\n"
+"POT-Creation-Date: 2018-10-24 12:09+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,12 +27,10 @@ msgid "Description"
 msgstr "Beskrivning"
 
 #: .\Auctions\forms.py:24
-#| msgid "Deadline<br /> (Format: dd.mm.YYYY HH:MM:SS)"
 msgid "Deadline<br /> (Format: dd.mm.YYYY HH:MM)"
 msgstr "Deadline<br /> (Format: dd.mm.ÅÅÅ HH:MM)"
 
 #: .\Auctions\forms.py:25
-#| msgid "Minimum Price"
 msgid "Minimum price"
 msgstr "Minimum Pris"
 
@@ -41,7 +39,6 @@ msgid "Post"
 msgstr "Publicera"
 
 #: .\Auctions\forms.py:61
-#| msgid "New Auction"
 msgid "Confirm"
 msgstr "Bekräfta"
 
@@ -54,7 +51,6 @@ msgid "Make Bid"
 msgstr "Bjud"
 
 #: .\Auctions\templates\auction.html:7
-#| msgid "New Auction"
 msgid "Auction"
 msgstr "Auktion"
 
@@ -109,95 +105,92 @@ msgstr "Banna denna auktion"
 
 #: .\Auctions\templates\confirm_form.html:7
 #: .\Auctions\templates\confirm_form.html:13
-#| msgid "New Auction"
 msgid "Confirm Auction"
 msgstr "Bekräfta Auktion"
 
 #: .\Auctions\templates\edit_auction.html:8
-#| msgid "New Auction"
 msgid "Edit Auction"
 msgstr "Redigera auktion"
 
 #: .\Auctions\templates\edit_auction.html:14
-#| msgid "New Auction"
 msgid "Editing Auction"
 msgstr "Redigerar auktion"
 
 #: .\Auctions\templates\new_auction.html:7
-#: .\Auctions\templates\new_auction.html:13 .\YAAS_App\templates\base.html:33
+#: .\Auctions\templates\new_auction.html:13 .\YAAS_App\templates\base.html:34
 msgid "New Auction"
 msgstr "Ny Auktion"
 
-#: .\Auctions\views.py:41 .\Auctions\views.py:71
+#: .\Auctions\views.py:43 .\Auctions\views.py:73
 msgid "The deadline has to be at least 72 hours in the future!"
 msgstr "Deadlinen måste vara minst 72h i framtiden!"
 
-#: .\Auctions\views.py:44 .\Auctions\views.py:73
+#: .\Auctions\views.py:46 .\Auctions\views.py:75
 msgid "The minimum price has to be at least 0!"
 msgstr "Minimum priset måste vara åtminstone 0!"
 
-#: .\Auctions\views.py:103 .\Auctions\views.py:178 .\Auctions\views.py:191
-#: .\Auctions\views.py:209
+#: .\Auctions\views.py:104 .\Auctions\views.py:187 .\Auctions\views.py:200
+#: .\Auctions\views.py:218
 msgid "There is no auction with that id!"
 msgstr "Det finns ingen auktion med detta id!"
 
-#: .\Auctions\views.py:139
+#: .\Auctions\views.py:144
+msgid "Someone bid before you. Try again!"
+msgstr "Någon bjöd före dig. Försök igen!"
+
+#: .\Auctions\views.py:148
 msgid ""
 "Your bid has to be greater than or equal to the minimum price AND greater "
 "than zero!"
-msgstr "Dit bud måste vara större än eller lika med minimum priset OCH vara större än noll!"
+msgstr ""
+"Dit bud måste vara större än eller lika med minimum priset OCH vara större "
+"än noll!"
 
-#: .\Auctions\views.py:142
-#| msgid "You have the currently winning bid"
+#: .\Auctions\views.py:151
 msgid "Your bid has to be greater than the currently winning bid!"
 msgstr "Ditt bud måste vara större än det nuvarande vinnande budet!"
 
-#: .\Auctions\views.py:145
+#: .\Auctions\views.py:154
 msgid "You already have the highest bid!"
 msgstr "Du har redan det högsta budet!"
 
-#: .\Auctions\views.py:147
+#: .\Auctions\views.py:156
 msgid "You cannot bid on your own auctions!"
 msgstr "Du kan inte bjuda på dina egna auktioner!"
 
-#: .\Auctions\views.py:149
+#: .\Auctions\views.py:158
 msgid ""
 "The description seems to have changed. Please reload the page and try to "
 "submit your bid again. "
-msgstr "Beskrivningen verkar ha ändrat. Var god ladda om sidan och försök skicka ditt bud på nytt."
+msgstr ""
+"Beskrivningen verkar ha ändrat. Var god ladda om sidan och försök skicka "
+"ditt bud på nytt."
 
-#: .\Auctions\views.py:152 .\Auctions\views.py:189
-#| msgid "This auction is no longer active"
+#: .\Auctions\views.py:161 .\Auctions\views.py:198
 msgid "This auction is no longer active!"
 msgstr "Den här auktionen är inte aktiv längre"
 
-#: .\Auctions\views.py:174
-#| msgid "This auction is no longer active"
+#: .\Auctions\views.py:183
 msgid "You cannot edit this auction because it is no longer active!"
 msgstr "Du kan inte redigera denna auktion för den är inte längre aktiv"
 
-#: .\Auctions\views.py:176
-#| msgid "You are not logged in"
+#: .\Auctions\views.py:185
 msgid "You are not allowed to edit this auction!"
 msgstr "Du har inte behörighet att redigera denna auktion!"
 
-#: .\Auctions\views.py:207
-#| msgid "New Auction"
+#: .\Auctions\views.py:216
 msgid "Auction banned!"
 msgstr "Auktion bannad!"
 
 #: .\YAAS_App\forms.py:11
-#| msgid "First Name"
 msgid "First name"
 msgstr "Förnamn"
 
 #: .\YAAS_App\forms.py:12
-#| msgid "Last Name"
 msgid "Last name"
 msgstr "Efternamn"
 
 #: .\YAAS_App\forms.py:13
-#| msgid "Change Email Address"
 msgid "Email address"
 msgstr "Ändra email adress"
 
@@ -207,44 +200,39 @@ msgid "Username"
 msgstr "Användarnamn"
 
 #: .\YAAS_App\forms.py:15 .\YAAS_App\forms.py:48
-#| msgid "Change Password"
 msgid "Password"
 msgstr "Lösenord"
 
 #: .\YAAS_App\forms.py:16
-#| msgid "Change my password"
 msgid "Repeat password"
 msgstr "Upprepa lösenord"
 
-#: .\YAAS_App\forms.py:34 .\YAAS_App\templates\base.html:30
+#: .\YAAS_App\forms.py:34 .\YAAS_App\templates\base.html:31
 #: .\YAAS_App\templates\registration\register.html:7
 #: .\YAAS_App\templates\registration\register.html:12
 msgid "Register"
 msgstr "Registrera dig"
 
-#: .\YAAS_App\forms.py:58 .\YAAS_App\templates\base.html:31
+#: .\YAAS_App\forms.py:58 .\YAAS_App\templates\base.html:32
 #: .\YAAS_App\templates\registration\login.html:8
 #: .\YAAS_App\templates\registration\login.html:14
 msgid "Login"
 msgstr "Logga in"
 
 #: .\YAAS_App\forms.py:62
-#| msgid "Change Email Address"
 msgid "New Email address"
 msgstr "Ny email adress"
 
 #: .\YAAS_App\forms.py:63
-#| msgid "Change Email Address"
 msgid "New Email address again"
 msgstr "Ny email adress igen"
 
 #: .\YAAS_App\forms.py:71
-#| msgid "Email Changed"
 msgid "Change"
 msgstr "Ändra"
 
 #: .\YAAS_App\templates\admin_panel.html:6
-#: .\YAAS_App\templates\admin_panel.html:12 .\YAAS_App\templates\base.html:35
+#: .\YAAS_App\templates\admin_panel.html:12 .\YAAS_App\templates\base.html:36
 msgid "Admin Panel"
 msgstr "Administratör Panel"
 
@@ -253,7 +241,6 @@ msgid "Sent Emails"
 msgstr "Sända email"
 
 #: .\YAAS_App\templates\admin_panel.html:25
-#| msgid "New Auction"
 msgid "Banned Auctions"
 msgstr "Bannade Auktioner"
 
@@ -261,11 +248,73 @@ msgstr "Bannade Auktioner"
 msgid "Access denied"
 msgstr "Åtkomst nekad"
 
-#: .\YAAS_App\templates\base.html:28
+#: .\YAAS_App\templates\api_about.html:6 .\YAAS_App\templates\api_about.html:12
+#: .\YAAS_App\templates\base.html:29
+msgid "API"
+msgstr ""
+
+#: .\YAAS_App\templates\api_about.html:14
+msgid ""
+"Our site has an REST API Available for use. You can use the web interface "
+"available at"
+msgstr "Vår hemsida har en REST API tillgänglig för användning. Du kan använda web gränssnittet tillgängligt på"
+
+#: .\YAAS_App\templates\api_about.html:14
+msgid "or any other client"
+msgstr "eller någon annan klient"
+
+#: .\YAAS_App\templates\api_about.html:15
+msgid "For all users"
+msgstr "För alla användare"
+
+#: .\YAAS_App\templates\api_about.html:16
+msgid "To get all auctions send a GET request to"
+msgstr "För att hämta alla auktioner, skicka en GET request till"
+
+#: .\YAAS_App\templates\api_about.html:17
+msgid "To search for auctions, send a GET request to"
+msgstr "För att söka efter auktioner, skicka en GET request till"
+
+#: .\YAAS_App\templates\api_about.html:18
+msgid "To get a specific auction send a GET request to"
+msgstr "För att hämta en specifik auktion, skicka en GET request till"
+
+#: .\YAAS_App\templates\api_about.html:18
+#: .\YAAS_App\templates\api_about.html:22
+#, fuzzy
+#| msgid "There is no auction with that id!"
+msgid "where id is the auction id"
+msgstr "Det finns ingen auktion med detta id!"
+
+#: .\YAAS_App\templates\api_about.html:20
+msgid "For Registered Users Only"
+msgstr "För registrerade användare"
+
+#: .\YAAS_App\templates\api_about.html:21
+msgid "You have to specify your login credentials in your request"
+msgstr "Du måste specifiera dina login uppgifter i din request"
+
+#: .\YAAS_App\templates\api_about.html:22
+msgid "To bid on an auction, first GET the specific auction using"
+msgstr "För att bjuda på en auktion, först GET den specifika auktionen med hjälp av"
+
+#: .\YAAS_App\templates\api_about.html:23
+msgid "then send a POST request to the same URL with json content"
+msgstr "skicka sen en POST request till samma URL med json innehåll"
+
+#: .\YAAS_App\templates\api_about.html:23
+msgid "attached, where amount is an integer"
+msgstr "bifogat, var amount är ett heltal"
+
+#: .\YAAS_App\templates\api_about.html:24
+msgid "or decimal number (Only two decimal points will be considered)"
+msgstr "eller ett decimaltal (Endast två decimaler tas i beaktande)"
+
+#: .\YAAS_App\templates\base.html:28 .\YAAS_App\templates\index.html:6
 msgid "Home"
 msgstr "Hem"
 
-#: .\YAAS_App\templates\base.html:37
+#: .\YAAS_App\templates\base.html:38
 #: .\YAAS_App\templates\email_change_done.html:6
 #: .\YAAS_App\templates\email_change_form.html:7
 #: .\YAAS_App\templates\my_account.html:6
@@ -276,7 +325,7 @@ msgstr "Hem"
 msgid "My Account"
 msgstr "Mitt Konto"
 
-#: .\YAAS_App\templates\base.html:38
+#: .\YAAS_App\templates\base.html:39
 msgid "Logout"
 msgstr "Logga ut"
 
@@ -334,7 +383,6 @@ msgid "Last Name"
 msgstr "Efternamn"
 
 #: .\YAAS_App\templates\my_account.html:20
-#| msgid "My Account"
 msgid "Edit Account"
 msgstr "Redigera Konto"
 
@@ -345,7 +393,6 @@ msgid "Change Password"
 msgstr "Ändra Lösenord"
 
 #: .\YAAS_App\templates\my_account.html:24
-#| msgid "New Auction"
 msgid "My Auctions"
 msgstr "Mina Auktioner"
 
