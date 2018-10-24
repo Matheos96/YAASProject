@@ -168,6 +168,7 @@ def set_user_lang(request, user):
 def api_about(request):
     return render(request, "api_about.html")
 
+
 @api_view(['GET'])
 def auction_list(request, format=None):
     if request.method == 'GET':
@@ -176,7 +177,8 @@ def auction_list(request, format=None):
             auctions = Auction.objects.filter(Q(title__icontains=query), deadline__gte=timezone.now(),
                                               status=Auction.STATUS_ACTIVE)
         else:
-            auctions = Auction.objects.all()
+            auctions = Auction.objects.filter(deadline__gte=timezone.now(),
+                                              status=Auction.STATUS_ACTIVE)
         serializer = AuctionSerializer(auctions, many=True, context={'request': request})
         return Response(serializer.data)
 

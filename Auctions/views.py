@@ -124,6 +124,10 @@ class AuctionView(View):
                                 bid = Bid(bidder=request.user, auction=auction, amount=new_bid)
                                 bid.save()
                                 auction.winning_bid = bid
+                                # Soft Deadlines
+                                if auction.deadline-timezone.localtime()<datetime.timedelta(minutes=5):
+                                    print("YAY")
+                                    auction.deadline += datetime.timedelta(minutes=5)
                                 # Handle concurrency
                                 try:
                                     auction.save()
